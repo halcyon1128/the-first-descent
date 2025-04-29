@@ -33,8 +33,23 @@ export function GameProvider({ children }) {
     Aredhel_of_the_Pestilence: { hp: 10, atk: 1, def: 0.9 },
   });
 
-  // console.log("GameContext - Hero Keys:", Object.keys(hero));
-  // console.log("GameContext - Enemy Keys:", Object.keys(enemy));
+  // // Print all heroes
+  // console.log("Heroes:");
+  // Object.entries(hero).forEach(([heroName, attributes]) => {
+  //   console.log(`${heroName}:`);
+  //   Object.entries(attributes).forEach(([key, value]) => {
+  //     console.log(`  ${key}: ${value}`);
+  //   });
+  // });
+
+  // // Print all enemies
+  // console.log("Enemies:");
+  // Object.entries(enemy).forEach(([enemyName, attributes]) => {
+  //   console.log(`${enemyName}:`);
+  //   Object.entries(attributes).forEach(([key, value]) => {
+  //     console.log(`  ${key}: ${value}`);
+  //   });
+  // });
 
   return (
     <GameContext.Provider value={{ hero, setHero, enemy, setEnemy }}>

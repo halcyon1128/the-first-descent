@@ -7,26 +7,28 @@ import Card from "./Card";
 
 export default function GameBoard() {
   const { heroRoster, enemyRoster } = useContext(PlayerContext);
-  const { selectUnit, engage } = useContext(ActionContext);
+  const { selectUnit } = useContext(ActionContext); // Removed engageUnits
 
   return (
-    <div class="h-screen w-screen bg-gray-900 text-gray-300 flex flex-col items-center justify-center py-2 text-xxs md:text-lg lg:text-lg">
+    <div class="h-screen w-screen bg-gray-900 flex flex-col items-center justify-center py-2 text-xs md:text-lg lg:text-lg">
       {/* Enemy Formation */}
       <div class="flex flex-row gap-2 justify-center">
-        {enemyRoster.front.map((unit) => (
-          <Card
-            key={unit.id}
-            {...unit}
-            onClick={() => selectUnit(unit, "enemy")}
-          />
-        ))}
-      </div>
-      <div class="flex flex-row gap-2 mt-2 justify-center">
         {enemyRoster.back.map((unit) => (
           <Card
             key={unit.id}
             {...unit}
             onClick={() => selectUnit(unit, "enemy")}
+            team="enemy"
+          />
+        ))}
+      </div>
+      <div class="flex flex-row gap-2 mt-2 justify-center ">
+        {enemyRoster.front.map((unit) => (
+          <Card
+            key={unit.id}
+            {...unit}
+            onClick={() => selectUnit(unit, "enemy")}
+            team="enemy"
           />
         ))}
       </div>
@@ -41,6 +43,7 @@ export default function GameBoard() {
             key={unit.id}
             {...unit}
             onClick={() => selectUnit(unit, "hero")}
+            team="hero"
           />
         ))}
       </div>
@@ -50,17 +53,12 @@ export default function GameBoard() {
             key={unit.id}
             {...unit}
             onClick={() => selectUnit(unit, "hero")}
+            team="hero"
           />
         ))}
       </div>
 
-      {/* Engage button to trigger combat */}
-      <button
-        onClick={engage}
-        class="mt-4 px-4 py-2 bg-green-600 rounded focus:outline-none"
-      >
-        Engage!
-      </button>
+      {/* Engage button removed */}
     </div>
   );
 }

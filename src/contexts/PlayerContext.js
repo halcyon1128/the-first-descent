@@ -1,76 +1,92 @@
 // src/contexts/PlayerContext.js
 import { createContext } from "preact";
-import { useState, useContext, useEffect } from "preact/hooks";
-import { GameContext } from "./GameContext";
+import { useState, useEffect } from "preact/hooks";
 
 export const PlayerContext = createContext();
 
 export function PlayerProvider({ children }) {
-  const { hero, enemy } = useContext(GameContext);
-
   const [heroRoster, setHeroRoster] = useState({ front: [], back: [] });
   const [enemyRoster, setEnemyRoster] = useState({ front: [], back: [] });
 
+  // Run only once on mount
   useEffect(() => {
-    if (hero && enemy) {
-      setHeroRoster({
-        front: [
-          {
-            id: "Knight",
-            hp: 2,
-            atk: hero["Knight"].atk,
-            def: hero["Knight"].def,
-            status: "healthy",
-          },
-        ],
-        back: [
-          {
-            id: "Ranger",
-            hp: 1,
-            atk: hero["Ranger"].atk,
-            def: hero["Ranger"].def,
-            status: "healthy",
-          },
-          {
-            id: "Priest",
-            hp: 1,
-            atk: hero["Priest"].atk,
-            def: hero["Priest"].def,
-            status: "healthy",
-          },
-        ],
-      });
+    setHeroRoster({
+      front: [
+        {
+          id: "Reinhardt", // Added unique ID
+          type: "Knight", // Renamed original id to type
+          hp: 2,
+          maxHp: 2, // Added maxHp
+          atk: 1,
+          def: 0.5,
+          status: "healthy", // Uncommented/Set status
+        },
+      ],
+      back: [
+        {
+          id: "Sully", // Added unique ID
+          type: "Ranger", // Renamed original id to type
+          hp: 1,
+          maxHp: 1, // Added maxHp
+          atk: 0.8,
+          def: 0.2,
+          status: "healthy", // Uncommented/Set status
+        },
+        {
+          id: "Julian", // Added unique ID
+          type: "Priest", // Renamed original id to type
+          hp: 1,
+          maxHp: 1, // Added maxHp
+          atk: 0.2,
+          def: 0.2,
+          status: "healthy", // Uncommented/Set status
+        },
+      ],
+    });
 
-      setEnemyRoster({
-        front: [
-          {
-            id: "Orc",
-            hp: 2,
-            atk: enemy["Orc"].atk,
-            def: enemy["Orc"].def,
-            status: "healthy",
-          },
-          {
-            id: "Slime",
-            hp: 1,
-            atk: enemy["Slime"].atk,
-            def: enemy["Slime"].def,
-            status: "healthy",
-          },
-        ],
-        back: [
-          {
-            id: "Skeleton_Mage",
-            hp: 1,
-            atk: enemy["Skeleton_Mage"].atk,
-            def: enemy["Skeleton_Mage"].def,
-            status: "healthy",
-          },
-        ],
-      });
-    }
-  }, [hero, enemy]);
-
+    setEnemyRoster({
+      front: [
+        {
+          id: "Muck-muck", // Added unique ID
+          type: "Slime", // Renamed original id to type
+          hp: 1,
+          maxHp: 1, // Added maxHp
+          atk: 0.2,
+          def: 0,
+          status: "healthy", // Uncommented/Set status
+        },
+        {
+          id: "Kazuma", // Added unique ID
+          type: "Orc", // Renamed original id to type
+          hp: 2,
+          maxHp: 2, // Added maxHp
+          atk: 0.6,
+          def: 0.2,
+          status: "healthy", // Uncommented/Set status
+        },
+      ],
+      back: [
+        {
+          id: "Pontus", // Added unique ID
+          type: "Skeleton_Mage", // Renamed original id to type
+          hp: 1,
+          maxHp: 1, // Added maxHp
+          atk: 0.8,
+          def: 0.1,
+          status: "healthy", // Uncommented/Set status
+        },
+        {
+          id: "Brutus", // Added unique ID
+          type: "Skeleton_Archer", // Renamed original id to type
+          hp: 1,
+          maxHp: 1, // Added maxHp
+          atk: 0.7,
+          def: 0.1,
+          status: "maimed", // Kept original status
+        },
+      ],
+    });
+  }, []); // Added empty dependency array
   return (
     <PlayerContext.Provider
       value={{ heroRoster, enemyRoster, setHeroRoster, setEnemyRoster }}
