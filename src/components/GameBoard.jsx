@@ -1,4 +1,3 @@
-// src/components/GameBoard.jsx
 import { h } from "preact";
 import { useContext } from "preact/hooks";
 import { PlayerContext } from "../contexts/PlayerContext";
@@ -7,58 +6,56 @@ import Card from "./Card";
 
 export default function GameBoard() {
   const { heroRoster, enemyRoster } = useContext(PlayerContext);
-  const { selectUnit } = useContext(ActionContext); // Removed engageUnits
+  const { selectedAttacker } = useContext(ActionContext);
+
+  const filterByRow = (roster, row) => roster.filter((unit) => unit.row === row);
+
+  const enemyBackRow = filterByRow(enemyRoster, "back");
+  const enemyFrontRow = filterByRow(enemyRoster, "front");
+  const heroFrontRow = filterByRow(heroRoster, "front");
+  const heroBackRow = filterByRow(heroRoster, "back");
 
   return (
     <div class="h-screen w-screen bg-gray-900 flex flex-col items-center justify-center py-2 text-xs md:text-lg lg:text-lg">
-      {/* Enemy Formation */}
-      <div class="flex flex-row gap-2 justify-center">
-        {enemyRoster.back.map((unit) => (
+      <div class="flex flex-row gap-2 justify-center min-h-[120px] items-center">
+        {enemyBackRow.map((unit) => (
           <Card
             key={unit.id}
             {...unit}
-            onClick={() => selectUnit(unit, "enemy")}
-            team="enemy"
+            isSelected={selectedAttacker?.id === unit.id}
           />
         ))}
       </div>
-      <div class="flex flex-row gap-2 mt-2 justify-center ">
-        {enemyRoster.front.map((unit) => (
+      <div class="flex flex-row gap-2 mt-2 justify-center min-h-[120px] items-center">
+        {enemyFrontRow.map((unit) => (
           <Card
             key={unit.id}
             {...unit}
-            onClick={() => selectUnit(unit, "enemy")}
-            team="enemy"
+            isSelected={selectedAttacker?.id === unit.id}
           />
         ))}
       </div>
 
-      {/* Reserved center area for animations, etc. */}
       <div class="h-16"></div>
 
-      {/* Hero Formation */}
-      <div class="flex flex-row gap-2 mt-2 justify-center">
-        {heroRoster.front.map((unit) => (
+      <div class="flex flex-row gap-2 mt-2 justify-center min-h-[120px] items-center">
+        {heroFrontRow.map((unit) => (
           <Card
             key={unit.id}
             {...unit}
-            onClick={() => selectUnit(unit, "hero")}
-            team="hero"
+            isSelected={selectedAttacker?.id === unit.id}
           />
         ))}
       </div>
-      <div class="flex flex-row gap-2 mt-2 justify-center">
-        {heroRoster.back.map((unit) => (
+      <div class="flex flex-row gap-2 mt-2 justify-center min-h-[120px] items-center">
+        {heroBackRow.map((unit) => (
           <Card
             key={unit.id}
             {...unit}
-            onClick={() => selectUnit(unit, "hero")}
-            team="hero"
+            isSelected={selectedAttacker?.id === unit.id}
           />
         ))}
       </div>
-
-      {/* Engage button removed */}
     </div>
   );
 }

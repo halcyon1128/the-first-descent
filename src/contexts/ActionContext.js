@@ -1,129 +1,73 @@
-// src/contexts/ActionContext.js
 import { createContext } from "preact";
-import { useState, useContext, useCallback } from "preact/hooks"; // Combined imports
+import { useState, useContext, useCallback } from "preact/hooks";
 import { PlayerContext } from "./PlayerContext";
-import { rollAttack, rollDefend, updateTarget } from "../utils/combatUtils";
+import { handleCombat } from "../utils/combatUtils";
 
 export const ActionContext = createContext();
 
 export function ActionProvider({ children }) {
-  const { heroRoster, enemyRoster, setEnemyRoster } = useContext(PlayerContext);
+  const { heroRoster, enemyRoster, setHeroRoster, setEnemyRoster } = useContext(PlayerContext);
   const [selectedAttacker, setSelectedAttacker] = useState(null);
-  // No need for selectedDefender state anymore, it's transient
 
-  // Internal function to handle combat resolution
-  const _resolveCombat = useCallback(
-    (attacker, defender) => {
-      // Ensure both units are not killed before proceeding
-      if (attacker.status === 'killed' || defender.status === 'killed') {
-        console.warn("Cannot engage with a killed unit.");
-        setSelectedAttacker(null); // Reset selection if invalid
-        return;
-      }
-
-      console.log("Engaging units:", attacker, defender);
-
-      // Phase 1: Attack roll.
-      // Pass attacker's atk stat to rollAttack
-      if (!rollAttack(attacker.atk)) {
-        console.log(`${attacker.name} missed ${defender.name}.`);
-        return { outcome: "miss" };
-      }
-      console.log(`${attacker.name}'s attack roll succeeded.`);
-
-      // Phase 2: Defense roll.
-      // Pass defender's def stat to rollDefend
-      if (rollDefend(defender.def)) {
-        console.log(`${defender.name} deflected the attack.`);
-        return { outcome: "defended" };
-      }
-      console.log(`${defender.name}'s defense roll failed; damage goes through.`);
-
-      // Phase 3: Update target's HP.
-      const updatedDefender = updateTarget(defender);
-      console.log(
-        `${defender.name} takes 1 damage. HP: ${updatedDefender.hp}`
-      );
-
-      // Update enemy roster
-      setEnemyRoster((prev) => {
-        const newFront = prev.front.map((u) =>
-          u.id === defender.id ? updatedDefender : u
-        );
-        const newBack = prev.back.map((u) =>
-          u.id === defender.id ? updatedDefender : u
-        );
-        return { front: newFront, back: newBack };
-      });
-
-      return { outcome: "hit" };
-    },
-    [enemyRoster, setEnemyRoster] // Dependencies for useCallback
-  );
-
-  // Refactored selection function
   const selectUnit = useCallback(
-    (unit, team) => {
-      if (team === "hero") {
-        // Find the hero unit from the roster to ensure we have the latest state
-        const foundHero =
-          heroRoster.front.find((u) => u.id === unit.id) ||
-          heroRoster.back.find((u) => u.id === unit.id);
+    (unit) => {
+      console.log("selectUnit called with:", unit);
 
-        if (foundHero) {
-          // Prevent selecting a killed hero
-          if (foundHero.status === 'killed') {
-            console.log(`${foundHero.name} is killed and cannot attack.`);
-            return; // Do nothing if the hero is killed
-          }
-
-          // If this hero is already selected, deselect it.
-          if (selectedAttacker && selectedAttacker.id === foundHero.id) {
-             console.log(`Deselected attacker: ${foundHero.name}`);
-             return setSelectedAttacker(foundHero.name);
-             
-          } else {
-             console.log(`Selected attacker: ${foundHero.name}`);
-             return setSelectedAttacker(foundHero);
-          }
+      if (unit.team === "hero") {
+        const currentHeroState = heroRoster.find((u) => u.id === unit.id);
+        if (!currentHeroState) {
+          console.error("Hero unit not found in roster:", unit.id);
+          return;
         }
-      } else if (team === "enemy" && selectedAttacker) {
-        // Find the enemy unit from the roster
-        const foundEnemy =
-          enemyRoster.front.find((u) => u.id === unit.id) ||
-          enemyRoster.back.find((u) => u.id === unit.id);
 
-        if (foundEnemy) {
-           // Prevent targeting a killed enemy
-           if (foundEnemy.status === 'killed') {
-             console.log(`${foundEnemy.name} is already killed.`);
-             return; // Do nothing if the target is killed
-           }
-          console.log(`Selected target: ${foundEnemy.name}`);
-          // Attacker is selected, and an enemy is clicked: resolve combat
-          _resolveCombat(selectedAttacker, foundEnemy);
-          // Reset attacker selection after combat
+        if (currentHeroState.status === 'killed') {
+          console.log(`${currentHeroState.type} ${currentHeroState.id} is killed and cannot attack.`);
+          return;
+        }
+
+        if (selectedAttacker && selectedAttacker.id === currentHeroState.id) {
+           console.log(`Deselected attacker: ${currentHeroState.type} ${currentHeroState.id}`);
+           setSelectedAttacker(null);
+        }
+        else if (selectedAttacker && selectedAttacker.id !== currentHeroState.id) {
+            console.log(`Switched attacker to: ${currentHeroState.type} ${currentHeroState.id}`);
+            setSelectedAttacker(currentHeroState);
+        }
+        else {
+           console.log(`Selected attacker: ${currentHeroState.type} ${currentHeroState.id}`);
+           setSelectedAttacker(currentHeroState);
+        }
+
+      } else if (unit.team === "enemy") {
+        if (selectedAttacker) {
+          const currentEnemyState = enemyRoster.find((u) => u.id === unit.id);
+          if (!currentEnemyState) {
+            console.error("Enemy unit not found in roster:", unit.id);
+            return;
+          }
+
+          if (currentEnemyState.status === 'killed') {
+            console.log(`${currentEnemyState.type} ${currentEnemyState.id} is already killed.`);
+            return;
+          }
+
+          console.log(`Selected target: ${currentEnemyState.type} ${currentEnemyState.id}`);
+
+          handleCombat(selectedAttacker, currentEnemyState, setHeroRoster, setEnemyRoster);
+
           setSelectedAttacker(null);
+
+        } else {
+          console.warn("Please select a hero attacker first.");
         }
-      } else if (team === "enemy" && !selectedAttacker) {
-         console.warn("Please select a hero attacker first.");
-      } else {
-         // Handle other cases like clicking an empty space or invalid target?
-         // For now, just reset selection if a hero clicks another hero
-         if (team === "hero" && selectedAttacker) {
-            console.log("Invalid target. Select an enemy.");
-            // Optionally deselect attacker here if desired:
-            // setSelectedAttacker(null);
-         }
       }
     },
-    [selectedAttacker, heroRoster, enemyRoster, _resolveCombat] // Dependencies for useCallback
+    [selectedAttacker, heroRoster, enemyRoster, setHeroRoster, setEnemyRoster]
   );
 
-  // Only expose the refactored selectUnit action.
-  const actions = { selectUnit };
+  const contextValue = { selectedAttacker, selectUnit };
 
   return (
-    <ActionContext.Provider value={actions}>{children}</ActionContext.Provider>
+    <ActionContext.Provider value={contextValue}>{children}</ActionContext.Provider>
   );
 }

@@ -1,73 +1,69 @@
-/**
- * generate Random number
- * for use in attacking, defending and counter attacking phases
- * combatUtils scoped only
- */
 function getRandom(msecs, myRand) {
   msecs = new Date().getMilliseconds();
-  myRand = Math.round((msecs + Math.random()) / 10);
+  myRand = Math.floor(((msecs * Math.random()) % 101));
   return myRand;
 }
 
-/**
- * Rolls for an attack.
- * Special-case: a Knight’s attack always hits (true strike).
- * Otherwise, if Math.random() is less than attacker.atk, the attack lands.
- */
-export const rollAttack = (attackerAtk, hit) => {
-  attackerAtk *= 100;
-  console.log(`attackerAtk = ${attackerAtk}`);
-  if (attackerAtk > getRandom()) {
-    hit = true;
-    console.log("hit!");
-  } else {
-    hit = false;
-    console.log("miss!");
-  }
-
-  return hit;
+export const rollAttack = (attackerAtk) => {
+  const attackThreshold = Math.floor(attackerAtk * 100);
+  const roll = getRandom();
+  return roll < attackThreshold;
 };
 
-/**
- * Rolls for a defend.
- *
- */
-export const rollDefend = (defenderDef, deflect) => {
-  defenderDef *= 100;
-  console.log(`defenderDef = ${defenderDef}`);
-  if (defenderDef > getRandom()) {
-    deflect = true;
-    console.log("attack deflected!");
-  } else {
-    deflect = false;
-    console.log(`target is hit!`);
-  }
-  return deflect;
+export const rollDefend = (defenderDef) => {
+  const defendThreshold = Math.floor(defenderDef * 100);
+  const roll = getRandom();
+  return roll < defendThreshold;
 };
 
-/**
- * Decrease the target's HP by 1.
- * If HP drops to 0 or below, set status to 'killed'.
- * Otherwise, update status based on HP percentage (e.g., 'wounded' - placeholder for now).
- */
-export const updateTarget = (target) => {
-  const newHp = Math.max(target.hp - 1, 0); // Ensure HP doesn't go below 0
-  let newStatus = target.status; // Start with current status
+export const updateTarget = (target, damage = 1) => {
+  const newHp = Math.max(target.hp - damage, 0);
+  let newStatus = target.status;
 
   if (newHp <= 0) {
-    newStatus = "killed"; // Set status to killed if HP is 0 or less
+    newStatus = "killed";
   }
-  // Placeholder for other status updates like 'wounded'
-  // else if (newHp === 1 && target.maxHp > 1) {
-  //   newStatus = "wounded";
-  // }
-  // else {
-  //    newStatus = "healthy"; // Or revert to healthy if conditions met
-  // }
 
   return {
     ...target,
     hp: newHp,
-    status: newStatus, // Update status along with HP
+    status: newStatus,
   };
+};
+
+export const handleCombat = (attacker, defender, setHeroRoster, setEnemyRoster) => {
+  if (!attacker || !defender || attacker.status === 'killed' || defender.status === 'killed') {
+    console.warn("Invalid combat: Attacker or defender is missing or killed.");
+    return { outcome: "invalid" };
+  }
+
+  console.log(`Combat Initiated: ${attacker.type} ${attacker.id} vs ${defender.type} ${defender.id}`);
+
+  if (!rollAttack(attacker.atk)) {
+    console.log(`${attacker.type} ${attacker.id} missed ${defender.type} ${defender.id}.`);
+    return { outcome: "miss" };
+  }
+
+  console.log(`${attacker.type} ${attacker.id}'s attack roll succeeded.`);
+
+  if (rollDefend(defender.def)) {
+    console.log(`${defender.type} ${defender.id} deflected the attack.`);
+    return { outcome: "defended" };
+  }
+
+  console.log(`${defender.type} ${defender.id}'s defense roll failed; damage goes through.`);
+
+  const updatedDefender = updateTarget(defender);
+  console.log(`${defender.type} ${defender.id} takes 1 damage. HP: ${updatedDefender.hp}, Status: ${updatedDefender.status}`);
+
+  const rosterSetter = defender.team === 'hero' ? setHeroRoster : setEnemyRoster;
+  rosterSetter((prevRoster) =>
+    prevRoster.map((unit) =>
+      unit.id === defender.id ? updatedDefender : unit
+    )
+  );
+
+  console.log(`${defender.team === 'hero' ? 'Hero' : 'Enemy'} roster updated.`);
+
+  return { outcome: "hit" };
 };
