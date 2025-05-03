@@ -1,73 +1,83 @@
-import { createContext } from "preact";
-import { useState, useContext, useCallback } from "preact/hooks";
-import { PlayerContext } from "./PlayerContext";
-import { handleCombat } from "../utils/combatUtils";
+import { createContext } from 'preact'
+import { useState, useContext, useCallback, useEffect } from 'preact/hooks'
+import { PlayerContext } from './PlayerContext'
+import { processCombat, isValidCombatPair } from '../utils/combatUtils'
 
-export const ActionContext = createContext();
+export const ActionContext = createContext()
 
-export function ActionProvider({ children }) {
-  const { heroRoster, enemyRoster, setHeroRoster, setEnemyRoster } = useContext(PlayerContext);
-  const [selectedAttacker, setSelectedAttacker] = useState(null);
+export function ActionProvider ({ children }) {
+  const { heroRoster, enemyRoster, setHeroRoster, setEnemyRoster } =
+    useContext(PlayerContext)
 
-  const selectUnit = useCallback(
-    (unit) => {
-      console.log("selectUnit called with:", unit);
+  const [selectedAttacker, setSelectedAttacker] = useState(null)
+  const [selectedDefender, setSelectedDefender] = useState(null)
 
-      if (unit.team === "hero") {
-        const currentHeroState = heroRoster.find((u) => u.id === unit.id);
-        if (!currentHeroState) {
-          console.error("Hero unit not found in roster:", unit.id);
-          return;
-        }
+  // Reset function
+  const resetSelection = useCallback(() => {
+    setSelectedAttacker(null)
+    setSelectedDefender(null)
+    console.log('resetSelection()')
+  }, [])
 
-        if (currentHeroState.status === 'killed') {
-          console.log(`${currentHeroState.type} ${currentHeroState.id} is killed and cannot attack.`);
-          return;
-        }
-
-        if (selectedAttacker && selectedAttacker.id === currentHeroState.id) {
-           console.log(`Deselected attacker: ${currentHeroState.type} ${currentHeroState.id}`);
-           setSelectedAttacker(null);
-        }
-        else if (selectedAttacker && selectedAttacker.id !== currentHeroState.id) {
-            console.log(`Switched attacker to: ${currentHeroState.type} ${currentHeroState.id}`);
-            setSelectedAttacker(currentHeroState);
-        }
-        else {
-           console.log(`Selected attacker: ${currentHeroState.type} ${currentHeroState.id}`);
-           setSelectedAttacker(currentHeroState);
-        }
-
-      } else if (unit.team === "enemy") {
-        if (selectedAttacker) {
-          const currentEnemyState = enemyRoster.find((u) => u.id === unit.id);
-          if (!currentEnemyState) {
-            console.error("Enemy unit not found in roster:", unit.id);
-            return;
-          }
-
-          if (currentEnemyState.status === 'killed') {
-            console.log(`${currentEnemyState.type} ${currentEnemyState.id} is already killed.`);
-            return;
-          }
-
-          console.log(`Selected target: ${currentEnemyState.type} ${currentEnemyState.id}`);
-
-          handleCombat(selectedAttacker, currentEnemyState, setHeroRoster, setEnemyRoster);
-
-          setSelectedAttacker(null);
-
-        } else {
-          console.warn("Please select a hero attacker first.");
-        }
+  // Selection function
+  const selectUnit = useCallback(unit => {
+    setSelectedAttacker(prevAttacker => {
+      if (!prevAttacker) {
+        return unit
       }
-    },
-    [selectedAttacker, heroRoster, enemyRoster, setHeroRoster, setEnemyRoster]
-  );
 
-  const contextValue = { selectedAttacker, selectUnit };
+      // If attacker already set, try setting defender
+      setSelectedDefender(prevDefender => {
+        if (!prevDefender) {
+          return unit
+        }
+        return prevDefender
+      })
+
+      return prevAttacker
+    })
+  }, [])
+
+  // Check if a combat pair is valid
+  const isValidSelection = useCallback((attacker, defender) => {
+    return isValidCombatPair(attacker, defender)
+  }, [])
+
+  // Execute combat between two units
+  const executeCombat = useCallback(
+    (attacker, defender) => {
+      return processCombat(
+        attacker,
+        defender,
+        heroRoster,
+        enemyRoster,
+        setHeroRoster,
+        setEnemyRoster
+      )
+    },
+    [heroRoster, enemyRoster, setHeroRoster, setEnemyRoster]
+  )
+
+  // Auto-run combat and reset when both selected
+  useEffect(() => {
+    if (selectedAttacker && selectedDefender) {
+      executeCombat(selectedAttacker, selectedDefender)
+      resetSelection()
+    }
+  }, [selectedAttacker, selectedDefender, executeCombat, resetSelection])
+
+  const contextValue = {
+    selectedAttacker,
+    selectedDefender,
+    selectUnit,
+    resetSelection,
+    isValidSelection,
+    executeCombat
+  }
 
   return (
-    <ActionContext.Provider value={contextValue}>{children}</ActionContext.Provider>
-  );
+    <ActionContext.Provider value={contextValue}>
+      {children}
+    </ActionContext.Provider>
+  )
 }

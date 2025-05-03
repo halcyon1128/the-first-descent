@@ -1,10 +1,10 @@
 // src/contexts/GameContext.js
-import { createContext } from "preact";
-import { useState } from "preact/hooks";
+import { createContext } from 'preact'
+import { useState } from 'preact/hooks'
 
-export const GameContext = createContext();
+export const GameContext = createContext()
 
-export function GameProvider({ children }) {
+export function GameProvider ({ children }) {
   const [hero, setHero] = useState({
     Paladin: { hp: 3, atk: 0.5, def: 1 },
     Knight: { hp: 2, atk: 1, def: 0.5 },
@@ -15,8 +15,8 @@ export function GameProvider({ children }) {
     Ranger: { hp: 1, atk: 0.8, def: 0.2 },
     Assassin: { hp: 1, atk: 0.9, def: 0.4 },
     Mage: { hp: 1, atk: 0.9, def: 0.3 },
-    Warlock: { hp: 2, atk: 0.6, def: 0.3 },
-  });
+    Warlock: { hp: 2, atk: 0.6, def: 0.3 }
+  })
 
   const [enemy, setEnemy] = useState({
     Slime: { hp: 1, atk: 0.2, def: 0 },
@@ -30,30 +30,12 @@ export function GameProvider({ children }) {
     Wyvern: { hp: 4, atk: 0.7, def: 0.7 },
     Medusa: { hp: 2, atk: 1, def: 0.2 },
     Basilisk: { hp: 4, atk: 0.6, def: 0.6 },
-    Aredhel_of_the_Pestilence: { hp: 10, atk: 1, def: 0.9 },
-  });
-
-  // // Print all heroes
-  // console.log("Heroes:");
-  // Object.entries(hero).forEach(([heroName, attributes]) => {
-  //   console.log(`${heroName}:`);
-  //   Object.entries(attributes).forEach(([key, value]) => {
-  //     console.log(`  ${key}: ${value}`);
-  //   });
-  // });
-
-  // // Print all enemies
-  // console.log("Enemies:");
-  // Object.entries(enemy).forEach(([enemyName, attributes]) => {
-  //   console.log(`${enemyName}:`);
-  //   Object.entries(attributes).forEach(([key, value]) => {
-  //     console.log(`  ${key}: ${value}`);
-  //   });
-  // });
+    Aredhel_of_the_Pestilence: { hp: 10, atk: 1, def: 0.9 }
+  })
 
   return (
     <GameContext.Provider value={{ hero, setHero, enemy, setEnemy }}>
       {children}
     </GameContext.Provider>
-  );
+  )
 }
