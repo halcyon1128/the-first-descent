@@ -19,8 +19,6 @@ export const rollDefend = defenderDef => {
   return roll < defendThreshold
 }
 
-/////////////////////
-
 export const handleCombat = (
   attacker,
   defender,
@@ -34,6 +32,7 @@ export const handleCombat = (
   console.log('attacker: ', attacker)
   console.log('defender: ', defender)
 
+  //UPDATES PlayerContext Rosters for Re-rendering
   const finalizeAction = (targetToUpdate, updatedTarget) => {
     const isNowHero = updatedTarget.team === 'hero'
     const updateCurrent = isNowHero ? setHeroRoster : setEnemyRoster
@@ -42,7 +41,6 @@ export const handleCombat = (
     updateCurrent(currentRoster => {
       const exists = currentRoster.some(unit => unit.id === updatedTarget.id)
       let newRoster
-
       if (exists) {
         newRoster = currentRoster.map(unit =>
           unit.id === updatedTarget.id ? updatedTarget : unit
@@ -52,11 +50,9 @@ export const handleCombat = (
         const newUnit = { ...updatedTarget }
         newRoster = [...currentRoster, newUnit]
       }
-
       console.log(`[${updatedTarget.team}] newRoster:`, newRoster)
       return newRoster
     })
-
     // Remove unit from the other roster if it's still there
     updateOther(currentRoster => {
       const newRoster = currentRoster.filter(

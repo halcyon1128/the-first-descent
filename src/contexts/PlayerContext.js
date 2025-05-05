@@ -10,18 +10,18 @@ export function PlayerProvider ({ children }) {
   const initialRoster = [
     // HEROES
     {
-      id: 'Reinhardt',
-      type: 'Knight',
+      id: 'Sircam',
+      type: 'Paladin',
       row: 'front',
       team: 'hero',
-      hp: 2,
-      maxHp: 2,
-      atk: 1,
-      def: 0.5,
+      hp: 3,
+      maxHp: 3,
+      atk: 0.5,
+      def: 1,
       status: 'healthy'
     },
     {
-      id: 'Sully',
+      id: 'Kuroro',
       type: 'Ranger',
       row: 'back',
       team: 'hero',
@@ -32,27 +32,27 @@ export function PlayerProvider ({ children }) {
       status: 'healthy'
     },
     {
-      id: 'Alucard',
-      type: 'Necromancer',
+      id: 'Halcyon',
+      type: 'Priest',
       row: 'back',
       team: 'hero',
       hp: 1,
       maxHp: 1,
       atk: 0.2,
-      def: 0.3,
+      def: 0.2,
       status: 'healthy'
     },
 
     // ENEMIES
     {
-      id: 'Muck-muck',
-      type: 'Slime',
+      id: 'Kinjiro',
+      type: 'Orc',
       row: 'front',
       team: 'enemy',
-      hp: 1,
-      maxHp: 1,
-      atk: 0.2,
-      def: 0,
+      hp: 2,
+      maxHp: 2,
+      atk: 0.6,
+      def: 0.2,
       status: 'healthy'
     },
     {
