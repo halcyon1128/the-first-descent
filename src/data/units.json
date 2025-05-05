@@ -1,0 +1,222 @@
+[
+  {
+    "type": "Paladin",
+    "maxHp": 3,
+    "hp": 3,
+    "atk": 0.5,
+    "def": 1,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Knight",
+    "maxHp": 2,
+    "hp": 2,
+    "atk": 1,
+    "def": 0.5,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Necromancer",
+    "maxHp": 1,
+    "hp": 1,
+    "atk": 0,
+    "def": 0.3,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Revived",
+    "maxHp": 1,
+    "hp": 1,
+    "atk": 0.5,
+    "def": 0.1,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Priest",
+    "maxHp": 1,
+    "hp": 1,
+    "atk": 0.2,
+    "def": 0.2,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Bard",
+    "maxHp": 1,
+    "hp": 1,
+    "atk": 0.3,
+    "def": 0.2,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Ranger",
+    "maxHp": 1,
+    "hp": 1,
+    "atk": 0.8,
+    "def": 0.2,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Assassin",
+    "maxHp": 1,
+    "hp": 1,
+    "atk": 0.9,
+    "def": 0.4,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Mage",
+    "maxHp": 1,
+    "hp": 1,
+    "atk": 0.9,
+    "def": 0.3,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Warlock",
+    "maxHp": 2,
+    "hp": 2,
+    "atk": 0.6,
+    "def": 0.3,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Slime",
+    "maxHp": 1,
+    "hp": 1,
+    "atk": 0.2,
+    "def": 0,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Goblin",
+    "maxHp": 1,
+    "hp": 1,
+    "atk": 0.2,
+    "def": 0.2,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Orc",
+    "maxHp": 2,
+    "hp": 2,
+    "atk": 0.6,
+    "def": 0.2,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Skeleton_Archer",
+    "maxHp": 1,
+    "hp": 1,
+    "atk": 0.7,
+    "def": 0.1,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Skeleton_Mage",
+    "maxHp": 1,
+    "hp": 1,
+    "atk": 0.8,
+    "def": 0.1,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Wraith",
+    "maxHp": 1,
+    "hp": 1,
+    "atk": 0.6,
+    "def": 1,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Revenant",
+    "maxHp": 3,
+    "hp": 3,
+    "atk": 0.8,
+    "def": 0.7,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Minotaur",
+    "maxHp": 4,
+    "hp": 4,
+    "atk": 0.5,
+    "def": 0.8,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Wyvern",
+    "maxHp": 4,
+    "hp": 4,
+    "atk": 0.7,
+    "def": 0.7,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Medusa",
+    "maxHp": 2,
+    "hp": 2,
+    "atk": 1,
+    "def": 0.2,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Basilisk",
+    "maxHp": 4,
+    "hp": 4,
+    "atk": 0.6,
+    "def": 0.6,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  },
+  {
+    "type": "Aredhel_of_the_Pestilence",
+    "maxHp": 10,
+    "hp": 10,
+    "atk": 1,
+    "def": 0.9,
+    "status": "healthy",
+    "row": null,
+    "team": null
+  }
+]

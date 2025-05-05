@@ -1,5 +1,5 @@
 import { h } from 'preact'
-import { useContext } from 'preact/hooks'
+import { useContext, useLayoutEffect } from 'preact/hooks'
 import { ActionContext } from '../contexts/ActionContext'
 
 export default function Card ({
@@ -16,14 +16,30 @@ export default function Card ({
   const { selectUnit, selectedAttacker, selectedDefender } =
     useContext(ActionContext)
 
+  // Determine the color for the type name based on team.
   const nameColor = team === 'enemy' ? 'text-rose-400' : 'text-teal-200'
   const isKilled = status === 'killed'
   const isSelected = selectedAttacker?.id === id || selectedDefender?.id === id
 
+  // Derive whether a necromancer is currently selected from context
+  const necromancerSelected =
+    selectedAttacker?.type === 'Necromancer' ||
+    selectedDefender?.type === 'Necromancer'
+
+  // Update localStorage synchronously before paint if the necromancer selection changes.
+  useLayoutEffect(() => {
+    localStorage.setItem(
+      'necromancerSelected',
+      necromancerSelected ? 'true' : 'false'
+    )
+  }, [necromancerSelected])
+
   let cardClasses =
     'font-mono py-4 border border-gray-700 bg-gray-800 rounded-lg shadow-md flex flex-col focus:outline-none selection:bg-transparent w-40'
 
-  if (isKilled) {
+  // Normally, killed cards get opacity and not-allowed cursor.
+  // However, if necromancerSelected is true, even killed cards remain clickable.
+  if (isKilled && !necromancerSelected) {
     cardClasses += ' opacity-50 cursor-not-allowed'
   } else {
     cardClasses += ' hover:bg-slate-600'
@@ -33,15 +49,18 @@ export default function Card ({
     cardClasses += ' border-yellow-400 border-2'
   }
 
+  // Determine disabled state: if killed and no necromancer is selected, we disable.
+  const isDisabled = isKilled && !necromancerSelected
+
   return (
     <button
       onClick={
-        !isKilled
+        !isDisabled
           ? () =>
               selectUnit({ id, type, hp, maxHp, row, atk, def, status, team })
           : undefined
       }
-      disabled={isKilled}
+      disabled={isDisabled}
       class={cardClasses}
     >
       <div class='font-serif font-thin text-gray-300'>{id}</div>
@@ -54,6 +73,8 @@ export default function Card ({
       >
         {status}
       </div>
+      {/* <div class='invisible text-xxs p-0 m-0'>{atk}</div> */}
+      {/* <div class='invisible text-xxs p-0 m-0'>{def}</div> */}
     </button>
   )
 }

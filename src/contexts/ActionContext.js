@@ -16,7 +16,7 @@ export function ActionProvider ({ children }) {
   const resetSelection = useCallback(() => {
     setSelectedAttacker(null)
     setSelectedDefender(null)
-    console.log('resetSelection()')
+    console.log('...')
   }, [])
 
   // Selection function
@@ -25,7 +25,6 @@ export function ActionProvider ({ children }) {
       if (!prevAttacker) {
         return unit
       }
-
       // If attacker already set, try setting defender
       setSelectedDefender(prevDefender => {
         if (!prevDefender) {
