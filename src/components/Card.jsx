@@ -1,6 +1,9 @@
+// Card.jsx
+// Card.jsx
 import { h } from 'preact'
 import { useContext, useLayoutEffect } from 'preact/hooks'
 import { ActionContext } from '../contexts/ActionContext'
+// Removed useCombatTracking import as trackAction is no longer needed here
 
 export default function Card ({
   id,
@@ -15,6 +18,7 @@ export default function Card ({
 }) {
   const { selectUnit, selectedAttacker, selectedDefender } =
     useContext(ActionContext)
+  // Removed trackAction destructuring
 
   // Determine the color for the type name based on team.
   const nameColor = team === 'enemy' ? 'text-rose-400' : 'text-teal-200'
@@ -37,31 +41,46 @@ export default function Card ({
   let cardClasses =
     'font-mono py-4 border border-gray-700 bg-gray-800 rounded-lg shadow-md flex flex-col focus:outline-none selection:bg-transparent w-40'
 
-  // Normally, killed cards get opacity and not-allowed cursor.
-  // However, if necromancerSelected is true, even killed cards remain clickable.
-  if (isKilled && !necromancerSelected) {
-    cardClasses += ' opacity-50 cursor-not-allowed'
-  } else {
-    cardClasses += ' hover:bg-slate-600'
+  switch (true) {
+    case necromancerSelected && !isKilled && type !== 'Necromancer':
+      cardClasses += ' collapse'
+      break
+    case isSelected && !isKilled:
+      cardClasses += ' border-yellow-400 border-2'
+      break
+    case isKilled && !necromancerSelected:
+      cardClasses += ' opacity-50 cursor-not-allowed'
+      break
+    case !isKilled && !necromancerSelected:
+      cardClasses += ' hover:bg-slate-600'
+      break
+    default:
+      cardClasses += ' hover:bg-slate-600'
+      break
   }
 
-  if (isSelected && !isKilled) {
-    cardClasses += ' border-yellow-400 border-2'
-  }
-
-  // Determine disabled state: if killed and no necromancer is selected, we disable.
   const isDisabled = isKilled && !necromancerSelected
+
+  function handleClick () {
+    selectUnit({ id, type, hp, maxHp, row, atk, def, status, team })
+    // trackAction() // Removed call to trackAction
+    return
+  }
+
+  // Add a class and data attribute if this is an enemy card.
+  const enemyAttributes =
+    team === 'enemy'
+      ? {
+          className: `${cardClasses} enemy-card`,
+          'data-hp': isKilled ? '0' : hp
+        }
+      : { className: cardClasses }
 
   return (
     <button
-      onClick={
-        !isDisabled
-          ? () =>
-              selectUnit({ id, type, hp, maxHp, row, atk, def, status, team })
-          : undefined
-      }
+      onClick={!isDisabled ? () => handleClick() : undefined}
       disabled={isDisabled}
-      class={cardClasses}
+      {...enemyAttributes}
     >
       <div class='font-serif font-thin text-gray-300'>{id}</div>
       <div class={`font-semibold text-xxs mb-2 ${nameColor}`}>{type}</div>
@@ -73,8 +92,6 @@ export default function Card ({
       >
         {status}
       </div>
-      {/* <div class='invisible text-xxs p-0 m-0'>{atk}</div> */}
-      {/* <div class='invisible text-xxs p-0 m-0'>{def}</div> */}
     </button>
   )
 }

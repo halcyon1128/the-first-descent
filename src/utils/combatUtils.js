@@ -29,8 +29,8 @@ export const handleCombat = (
 ) => {
   const newDefender = defender
   const newAttacker = attacker
-  console.log('attacker: ', attacker)
-  console.log('defender: ', defender)
+  // console.log('attacker: ', attacker)
+  // console.log('defender: ', defender)
 
   //UPDATES PlayerContext Rosters for Re-rendering
   const finalizeAction = (targetToUpdate, updatedTarget) => {
@@ -50,7 +50,7 @@ export const handleCombat = (
         const newUnit = { ...updatedTarget }
         newRoster = [...currentRoster, newUnit]
       }
-      console.log(`[${updatedTarget.team}] newRoster:`, newRoster)
+      // console.log(`[${updatedTarget.team}] newRoster:`, newRoster)
       return newRoster
     })
     // Remove unit from the other roster if it's still there
@@ -116,6 +116,7 @@ export const handleCombat = (
       attacker.type !== 'Goblin' &&
       attacker.type !== 'Wraith' &&
       attacker.type !== 'Priest' &&
+      attacker.type !== 'Mage' &&
       attacker.type !== 'Necromancer':
       return console.log('target out of range!')
     //sniper-class
@@ -127,9 +128,12 @@ export const handleCombat = (
       attacker.type !== 'Wyvern' &&
       attacker.type !== 'Revenant' &&
       attacker.type !== 'Necromancer' &&
-      teamRoster(defender)
-        .filter(unit => unit.row === 'front')
-        .every(unit => unit.status !== 'killed'):
+      teamRoster(defender).filter(
+        u => u.row === 'front' && u.status !== 'killed'
+      ).length >=
+        teamRoster(defender).filter(
+          u => u.row === 'back' && u.status !== 'killed'
+        ).length:
       return console.log('target is well-defended')
     // NECROMANCY
     case attacker.type === 'Necromancer' && defender.status === 'killed':
@@ -181,12 +185,11 @@ export const handleCombat = (
         Object.assign(newDefender, _Revived)
       }
       return finalizeAction(defender, newDefender)
-
     //HEAL
     case attacker.team === defender.team &&
       attacker.type === 'Priest' &&
       attacker.type !== 'Necromancer':
-      console.log('defender.maxHp: ', defender.maxHp)
+      // console.log('defender.maxHp: ', defender.maxHp)
       newDefender.hp = newDefender.maxHp
       newDefender.status = 'healthy'
       return finalizeAction(defender, newDefender)
@@ -203,7 +206,9 @@ export const handleCombat = (
 
     //DEBUFF
     case attacker.team !== defender.team &&
-      (attacker.type === 'Warlock' || attacker.type === 'Skeleton_Mage'):
+      (attacker.type === 'Warlock' ||
+        attacker.type === 'Skeleton_Mage' ||
+        attacker.type === 'Mage'):
       let debuff = getRandom() > 0.5 ? 'maimed' : 'paralyzed'
 
       if (rollAttack(attacker.atk) === false && defender.status !== 'killed') {
@@ -231,7 +236,7 @@ export const handleCombat = (
     //default combat
 
     default:
-      console.log('attacker.atk -->', attacker.atk)
+      // console.log('attacker.atk -->', attacker.atk)
       if (rollAttack(attacker.atk) === false) {
         return console.log(attacker.id, `(${attacker.type})`, ' missed!')
       }

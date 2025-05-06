@@ -1,6 +1,7 @@
 import { createContext } from 'preact'
 import { useState, useContext, useCallback, useEffect } from 'preact/hooks'
 import { PlayerContext } from './PlayerContext'
+import { useCombatTracking } from './CombatTrackingContext' // Import useCombatTracking
 import { processCombat, isValidCombatPair } from '../utils/combatUtils'
 
 export const ActionContext = createContext()
@@ -8,6 +9,7 @@ export const ActionContext = createContext()
 export function ActionProvider ({ children }) {
   const { heroRoster, enemyRoster, setHeroRoster, setEnemyRoster } =
     useContext(PlayerContext)
+  const { setIsPlayerTurn } = useCombatTracking() // Get setIsPlayerTurn
 
   const [selectedAttacker, setSelectedAttacker] = useState(null)
   const [selectedDefender, setSelectedDefender] = useState(null)
@@ -60,10 +62,18 @@ export function ActionProvider ({ children }) {
   // Auto-run combat and reset when both selected
   useEffect(() => {
     if (selectedAttacker && selectedDefender) {
+      console.log('ActionContext: Executing combat and ending player turn.')
       executeCombat(selectedAttacker, selectedDefender)
       resetSelection()
+      setIsPlayerTurn(false) // Set turn to enemy
     }
-  }, [selectedAttacker, selectedDefender, executeCombat, resetSelection])
+  }, [
+    selectedAttacker,
+    selectedDefender,
+    executeCombat,
+    resetSelection,
+    setIsPlayerTurn
+  ]) // Add setIsPlayerTurn dependency
 
   const contextValue = {
     selectedAttacker,
