@@ -27,15 +27,24 @@ export default function EnemyBoard () {
           livingEnemies[Math.floor(Math.random() * livingEnemies.length)]
 
         // Simple AI: Select a random living hero defender
-        const defender =
-          livingHeroes[Math.floor(Math.random() * livingHeroes.length)]
+        const defender = () => {
+          const isBackrowDefended =
+            livingHeroes.filter(hero => hero.row === 'front').length >=
+            livingHeroes.filter(hero => hero.row === 'back').length
+          switch (true) {
+            default:
+              return livingHeroes[
+                Math.floor(Math.random() * livingHeroes.length)
+              ]
+          }
+        }
 
         console.log(
           `Enemy AI: ${attacker.id} (${attacker.type}) attacking ${defender.id} (${defender.type})`
         )
 
-        // Execute the combat action
-        executeCombat(attacker, defender)
+        //Execute Combat Action
+        executeCombat(attacker, defender())
       } else {
         console.log('Enemy AI: No valid targets or attackers available.')
       }
