@@ -79,7 +79,7 @@ export const handleCombat = (
       Skeleton_Archer: 'Skeleton_Archer',
       Bard: 'Wraith',
       Wraith: 'Wraith',
-      Orc: 'Wraith'
+      Orc: 'Orc_Undead'
     }
 
     // Default to 'Revived' if no specific unit is found
@@ -115,7 +115,8 @@ export const handleCombat = (
       attacker.type !== 'Wyvern' &&
       attacker.type !== 'Skeleton_Mage' &&
       attacker.type !== 'Goblin' &&
-      attacker.type !== 'Wraith' &&
+      attacker.type !== 'Wraith' && 
+      attacker.type !== 'Bard' &&
       attacker.type !== 'Priest' &&
       attacker.type !== 'Mage' &&
       attacker.type !== 'Necromancer':
@@ -201,12 +202,13 @@ export const handleCombat = (
 
     //BUFF
     case attacker.team === defender.team && attacker.type === 'Bard':
-      let buffValue = getRandom() > 0.3 ? "DEF" : "ATK";
+      let buffValue = getRandom() > 50 ? "DEF" : "ATK";
       if (buffValue === "DEF") {
         newDefender.def += 0.3;
       } else {
-        newDefender.atk += 0.5;
+        newDefender.atk += 0.8;
       }
+      console.log (defender.id, "'s atk & def --->", defender.atk, " ", defender.def)
       openModal(`${attacker.id} (${attacker.type}) buffed ${defender.id} (${defender.type})'s ${buffValue}!`)
       return finalizeAction(defender, newDefender)
 

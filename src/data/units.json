@@ -58,7 +58,7 @@
     "row": null,
     "team": "hero",
     "boss": null,
-    "rating": 3
+    "rating": 7
 
   },
   {
@@ -164,6 +164,18 @@
     "boss": false,
     "rating": 3
 
+  },{
+    "type": "Orc_Undead",
+    "maxHp": 2,
+    "hp": 2,
+    "atk": 0.4,
+    "def": 0.2,
+    "status": "healthy",
+    "row": "front",
+    "team": "enemy",
+    "boss": false,
+    "rating": 2
+
   },
   {
     "type": "Skeleton_Archer",
@@ -201,7 +213,7 @@
     "row": "front",
     "team": "enemy",
     "boss": false,
-    "rating": 5
+    "rating": 6
   },
   {
     "type": "Revenant",

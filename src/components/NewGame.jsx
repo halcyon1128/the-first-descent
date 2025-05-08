@@ -4,7 +4,7 @@ import { PlayerContext } from '../contexts/PlayerContext'
 import units from '../data/units.json'
 import defaultNames from '../data/defaultNames.json'
 
-const MAX_HEROES = 6
+const MAX_HEROES = 5
 
 const NewGame = () => {
   const { setHeroRoster, setEnemyRoster } = useContext(PlayerContext)
@@ -114,13 +114,16 @@ const NewGame = () => {
     currentRating += chosenBoss.rating;
   
     // 4. Prepare a shuffled pool of enemy copies without the .name property.
-    const pool = enemyTemplates
-      .map(enemy => {
-        const copy = { ...enemy };
-        delete copy.name;
-        return copy;
-      })
-      .sort(() => Math.random() - 0.5);
+// Create a pool of non-boss enemy copies
+const pool = enemyTemplates
+  .filter(enemy => !enemy.boss)  // Only include non-boss units
+  .map(enemy => {
+    const copy = { ...enemy };
+    delete copy.name;
+    return copy;
+  })
+  .sort(() => Math.random() - 0.5);
+
   
     // Add enemies until reaching the required collective rating.
     while (currentRating < minEnemyRating && pool.length > 0) {
