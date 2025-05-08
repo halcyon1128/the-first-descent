@@ -7,144 +7,32 @@ export function PlayerProvider ({ children }) {
   const [heroRoster, setHeroRoster] = useState([])
   const [enemyRoster, setEnemyRoster] = useState([])
 
+  // Initial Roster (could be fetched from a server, or static data like in the previous example)
   const initialRoster = [
     // HEROES
-    {
-      id: 'Pathfinder',
-      type: 'Assassin',
-      maxHp: 1,
-      hp: 1,
-      atk: 0.9,
-      def: 0.4,
-      status: 'healthy',
-      row: 'back',
-      team: 'hero'
-    },
-    {
-      id: 'Sircam',
-      type: 'Knight',
-      maxHp: 2,
-      hp: 2,
-      atk: 1,
-      def: 0.5,
-      status: 'healthy',
-      row: 'front',
-      team: 'hero'
-    },
-    {
-      id: 'Kuroro',
-      type: 'Ranger',
-      row: 'back',
-      team: 'hero',
-      hp: 1,
-      maxHp: 1,
-      atk: 0.8,
-      def: 0.2,
-      status: 'healthy'
-    },
-    {
-      id: 'Halcyon',
-      type: 'Mage',
-      row: 'back',
-      team: 'hero',
-      hp: 1,
-      maxHp: 1,
-      hp: 1,
-      atk: 1.5,
-      def: 0.3,
-      status: 'healthy'
-    },
-
-    ,
-    // ENEMIES
-    {
-      id: 'Cassius',
-      type: 'Skeleton_Archer',
-      row: 'back',
-      team: 'enemy',
-      hp: 1,
-      maxHp: 1,
-      atk: 0.7,
-      def: 0.1,
-      status: 'healthy'
-    },
-    {
-      id: 'Igwop',
-      type: 'Goblin',
-      maxHp: 1,
-      hp: 1,
-      atk: 0.2,
-      def: 0.2,
-      status: 'healthy',
-      row: 'front',
-      team: 'enemy'
-    },
-    {
-      id: 'Kinjiro',
-      type: 'Orc',
-      row: 'front',
-      team: 'enemy',
-      hp: 2,
-      maxHp: 2,
-      atk: 0.6,
-      def: 0.2,
-      status: 'healthy'
-    },
-    {
-      id: "D'Artois",
-      type: 'Revenant',
-      maxHp: 3,
-      hp: 3,
-      atk: 0.8,
-      def: 0.7,
-      status: 'healthy',
-      row: 'front',
-      team: 'enemy'
-    },
-    {
-      id: 'Kazuma',
-      type: 'Orc',
-      row: 'front',
-      team: 'enemy',
-      hp: 2,
-      maxHp: 2,
-      atk: 0.6,
-      def: 0.2,
-      status: 'healthy'
-    },
-    {
-      id: 'Opawug',
-      type: 'Goblin',
-      maxHp: 1,
-      hp: 1,
-      atk: 0.2,
-      def: 0.2,
-      status: 'healthy',
-      row: 'front',
-      team: 'enemy'
-    },
-    {
-      id: 'Pontus',
-      type: 'Skeleton_Mage',
-      row: 'back',
-      team: 'enemy',
-      hp: 1,
-      maxHp: 1,
-      atk: 0.8,
-      def: 0.1,
-      status: 'healthy'
-    },
-    {
-      id: 'Brutus',
-      type: 'Skeleton_Archer',
-      row: 'back',
-      team: 'enemy',
-      hp: 1,
-      maxHp: 1,
-      atk: 0.7,
-      def: 0.1,
-      status: 'healthy'
-    }
+    // {
+    //   id: 'Pathfinder',
+    //   type: 'Assassin',
+    //   maxHp: 1,
+    //   hp: 1,
+    //   atk: 0.8,
+    //   def: 0.4,
+    //   status: 'healthy',
+    //   row: 'back',
+    //   team: 'hero'
+    // },
+    // {
+    //   id: 'Sircam',
+    //   type: 'Knight',
+    //   maxHp: 2,
+    //   hp: 2,
+    //   atk: 1.1,
+    //   def: 0.6,
+    //   status: 'healthy',
+    //   row: 'front',
+    //   team: 'hero'
+    // },
+    // ... (Add your initial heroes and enemies here)
   ]
 
   function sortUnits (roster) {
@@ -153,15 +41,30 @@ export function PlayerProvider ({ children }) {
     return { heroes, enemies }
   }
 
+  // Effect to initialize rosters when the component is mounted
   useEffect(() => {
     const { heroes, enemies } = sortUnits(initialRoster)
     setHeroRoster(heroes)
     setEnemyRoster(enemies)
   }, [])
 
+  // This function is responsible for updating the rosters based on the updates from NewGame
+  const updateHeroRoster = newHeroRoster => {
+    setHeroRoster(newHeroRoster)
+  }
+
+  const updateEnemyRoster = newEnemyRoster => {
+    setEnemyRoster(newEnemyRoster)
+  }
+
   return (
     <PlayerContext.Provider
-      value={{ heroRoster, enemyRoster, setHeroRoster, setEnemyRoster }}
+      value={{
+        heroRoster,
+        enemyRoster,
+        setHeroRoster: updateHeroRoster, // Allow NewGame to set hero roster
+        setEnemyRoster: updateEnemyRoster // Allow NewGame to set enemy roster
+      }}
     >
       {children}
     </PlayerContext.Provider>
