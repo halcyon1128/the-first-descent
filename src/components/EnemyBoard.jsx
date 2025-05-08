@@ -1,5 +1,5 @@
 import { h } from 'preact'
-import { useEffect, useContext } from 'preact/hooks'
+import { useEffect, useContext, useState } from 'preact/hooks'
 import { useCombatTracking } from '../contexts/CombatTrackingContext'
 import Card from './Card'
 import { PlayerContext } from '../contexts/PlayerContext'
@@ -10,57 +10,69 @@ export default function EnemyBoard () {
   const { setIsPlayerTurn } = useCombatTracking() // Get setIsPlayerTurn, remove actionCount/resetAction
   const { executeCombat } = useContext(ActionContext)
 
-  // --- Enemy AI Logic ---
-  // This useEffect runs once when EnemyBoard mounts (i.e., when isPlayerTurn becomes false)
+  // New state for UI highlighting of the selected enemy and hero
+  const [selectedEnemyId, setSelectedEnemyId] = useState(null)
+  const [selectedHeroId, setSelectedHeroId] = useState(null)
+
+  // --- Enemy AI Logic with staggered selections ---
   useEffect(() => {
     console.log('EnemyBoard: Mounted, initiating enemy turn...')
 
-    // Add a small delay for visual feedback (optional)
-    const timer = setTimeout(() => {
+    let enemySelectTimer, heroSelectTimer, executeTimer
+
+    enemySelectTimer = setTimeout(() => {
       // Filter for living units only
       const livingEnemies = enemyRoster.filter(unit => unit.status !== 'killed')
       const livingHeroes = heroRoster.filter(unit => unit.status !== 'killed')
 
       if (livingEnemies.length > 0 && livingHeroes.length > 0) {
-        // Simple AI: Select a random living enemy attacker
-        const attacker =
+        // Select a random living enemy attacker
+        const chosenAttacker =
           livingEnemies[Math.floor(Math.random() * livingEnemies.length)]
 
-        // Simple AI: Select a random living hero defender
-        const defender = () => {
-          const isBackrowDefended =
-            livingHeroes.filter(hero => hero.row === 'front').length >=
-            livingHeroes.filter(hero => hero.row === 'back').length
-          switch (true) {
-            default:
-              return livingHeroes[
-                Math.floor(Math.random() * livingHeroes.length)
-              ]
-          }
-        }
-
         console.log(
-          `Enemy AI: ${attacker.id} (${attacker.type}) attacking ${defender.id} (${defender.type})`
+          `Enemy AI: Selected attacker ${chosenAttacker.id} (${chosenAttacker.type})`
         )
+        // Set enemy highlight immediately
+        setSelectedEnemyId(chosenAttacker.id)
 
-        //Execute Combat Action
-        executeCombat(attacker, defender())
+        // After a 2-second delay, select a hero defender
+        heroSelectTimer = setTimeout(() => {
+          const chosenDefender =
+            livingHeroes[Math.floor(Math.random() * livingHeroes.length)]
+
+          console.log(
+            `Enemy AI: Selected defender ${chosenDefender.id} (${chosenDefender.type})`
+          )
+          setSelectedHeroId(chosenDefender.id)
+
+          // After an additional 1 second, execute the combat action
+          executeTimer = setTimeout(() => {
+            executeCombat(chosenAttacker, chosenDefender)
+            // Clear the highlights and revert turn back to player
+            setSelectedEnemyId(null)
+            setSelectedHeroId(null)
+            setIsPlayerTurn(true)
+            console.log(
+              'Enemy AI: Turn complete, switching back to player turn.'
+            )
+          }, 1000)
+        }, 1000)
       } else {
         console.log('Enemy AI: No valid targets or attackers available.')
+        setIsPlayerTurn(true)
       }
+    }, 500) // initial 500ms delay for visual feedback
 
-      // Set turn back to player immediately after AI turn
-      setIsPlayerTurn(true)
-      console.log(
-        'Enemy AI: Turn complete, setting isPlayerTurn=true (should switch back to GameBoard).'
-      )
-    }, 500) // 500ms delay
+    // Cleanup timers on component unmount
+    return () => {
+      clearTimeout(enemySelectTimer)
+      clearTimeout(heroSelectTimer)
+      clearTimeout(executeTimer)
+    }
+  }, [])
 
-    // Cleanup timeout on component unmount
-    return () => clearTimeout(timer)
-  }, []) // Empty dependency array ensures this runs only once on mount
-
-  // --- Rendering Logic (similar to GameBoard) ---
+  // --- Rendering Logic (same as GameBoard) ---
   const filterByRow = (roster, row) => roster.filter(unit => unit.row === row)
 
   const enemyBackRow = filterByRow(enemyRoster, 'back')
@@ -75,28 +87,57 @@ export default function EnemyBoard () {
         Enemy Turn...
       </div>
 
-      {/* Render the board layout (same as GameBoard) */}
+      {/* Render Enemy Rows */}
       <div class='flex flex-row gap-2 justify-center min-h-[120px] items-center'>
         {enemyBackRow.map(unit => (
-          <Card {...unit} key={unit.id} className='card' /> // Added key prop
+          <div
+            key={unit.id}
+            className={`${
+              unit.id === selectedEnemyId ? 'border-2 border-yellow-600' : ''
+            }`}
+          >
+            <Card {...unit} className='card' />
+          </div>
         ))}
       </div>
       <div class='flex flex-row gap-2 mt-2 justify-center min-h-[120px] items-center'>
         {enemyFrontRow.map(unit => (
-          <Card {...unit} key={unit.id} className='card' /> // Added key prop
+          <div
+            key={unit.id}
+            className={`${
+              unit.id === selectedEnemyId ? 'border-2 border-yellow-600' : ''
+            }`}
+          >
+            <Card {...unit} className='card' />
+          </div>
         ))}
       </div>
 
       <div class='h-16'></div>
 
+      {/* Render Hero Rows */}
       <div class='flex flex-row gap-2 mt-2 justify-center min-h-[120px] items-center'>
         {heroFrontRow.map(unit => (
-          <Card {...unit} key={unit.id} className='card' /> // Added key prop
+          <div
+            key={unit.id}
+            className={`${
+              unit.id === selectedHeroId ? 'border-2 border-rose-600' : ''
+            }`}
+          >
+            <Card {...unit} className='card' />
+          </div>
         ))}
       </div>
       <div class='flex flex-row gap-2 mt-2 justify-center min-h-[120px] items-center'>
         {heroBackRow.map(unit => (
-          <Card {...unit} key={unit.id} className='card' /> // Added key prop
+          <div
+            key={unit.id}
+            className={`${
+              unit.id === selectedHeroId ? 'border-2 border-rose-600' : ''
+            }`}
+          >
+            <Card {...unit} className='card' />
+          </div>
         ))}
       </div>
     </div>
