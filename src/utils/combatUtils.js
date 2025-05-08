@@ -25,7 +25,8 @@ export const handleCombat = (
   heroRoster,
   enemyRoster,
   setHeroRoster,
-  setEnemyRoster
+  setEnemyRoster,
+  openModal // Add openModal here
 ) => {
   const newDefender = defender
   const newAttacker = attacker
@@ -100,7 +101,7 @@ export const handleCombat = (
     (attacker.status === 'killed' || defender.status === 'killed') &&
     attacker.type !== 'Necromancer'
   ) {
-    console.warn('Invalid combat: Attacker or defender is missing or killed.')
+    openModal('Invalid combat: Attacker or defender is missing or killed.');
     return { outcome: 'invalid' }
   }
 
@@ -118,7 +119,8 @@ export const handleCombat = (
       attacker.type !== 'Priest' &&
       attacker.type !== 'Mage' &&
       attacker.type !== 'Necromancer':
-      return console.log('target out of range!')
+      openModal('Target out of range!');
+      return { outcome: 'out of range' }; // Return an object to indicate outcome
     //sniper-class
     case defender.row === 'back' &&
       attacker.type !== 'Ranger' &&
@@ -134,7 +136,8 @@ export const handleCombat = (
         teamRoster(defender).filter(
           u => u.row === 'back' && u.status !== 'killed'
         ).length:
-      return console.log('target is well-defended')
+      openModal('Target is well-defended');
+      return { outcome: 'target defended' }; // Return an object to indicate outcome
     // NECROMANCY
     case attacker.type === 'Necromancer' && defender.status === 'killed':
       const _Revenant = units.find(u => u.type === 'Revenant')
@@ -184,6 +187,7 @@ export const handleCombat = (
         _Revived.id = defender.id
         Object.assign(newDefender, _Revived)
       }
+      openModal(`${attacker.id} (${attacker.type}) revived ${defender.id} (${defender.type}) as a ${newDefender.type}!`)
       return finalizeAction(defender, newDefender)
     //HEAL
     case attacker.team === defender.team &&
@@ -192,17 +196,24 @@ export const handleCombat = (
       // console.log('defender.maxHp: ', defender.maxHp)
       newDefender.hp = newDefender.maxHp
       newDefender.status = 'healthy'
+      openModal(`${attacker.id} (${attacker.type}) healed ${defender.id} (${defender.type}) to full health!`)
       return finalizeAction(defender, newDefender)
 
     //BUFF
     case attacker.team === defender.team && attacker.type === 'Bard':
-      let buff =
-        getRandom() > 0.3 ? (newDefender.def += 0.3) : (newDefender.atk += 0.5)
+      let buffValue = getRandom() > 0.3 ? "DEF" : "ATK";
+      if (buffValue === "DEF") {
+        newDefender.def += 0.3;
+      } else {
+        newDefender.atk += 0.5;
+      }
+      openModal(`${attacker.id} (${attacker.type}) buffed ${defender.id} (${defender.type})'s ${buffValue}!`)
       return finalizeAction(defender, newDefender)
 
     //friendly-fire handler
     case attacker.team === defender.team && attacker.type !== 'Necromancer':
-      return console.log('cannot attack teammates!')
+      openModal('Cannot attack teammates!');
+      return { outcome: 'friendly fire' }; // Return an object to indicate outcome
 
     //DEBUFF
     case attacker.team !== defender.team &&
@@ -210,12 +221,15 @@ export const handleCombat = (
         attacker.type === 'Skeleton_Mage' ||
         attacker.type === 'Mage'):
       let debuff = getRandom() > 0.5 ? 'maimed' : 'paralyzed'
+      let message = "";
 
       if (rollAttack(attacker.atk) === false && defender.status !== 'killed') {
         newDefender.status = debuff
         debuff === 'maimed'
           ? (newDefender.def -= 0.5)
           : (newDefender.atk -= 0.5)
+        message = `${attacker.id} (${attacker.type})'s attack missed, but ${defender.id} (${defender.type}) is now ${debuff}!`;
+        openModal(message);
         return finalizeAction(defender, newDefender)
       }
       if (rollDefend(defender.def) === true && defender.status !== 'killed') {
@@ -223,14 +237,23 @@ export const handleCombat = (
         debuff === 'maimed'
           ? (newDefender.def -= 0.5)
           : (newDefender.atk -= 0.5)
+        message = `${defender.id} (${defender.type}) resisted the attack, but is now ${debuff}!`;
+        openModal(message);
         return finalizeAction(defender, newDefender)
       }
+      // Direct hit
       newDefender.hp -= 1
       if (newDefender.hp === 0) {
         newDefender.status = 'killed'
         newDefender.def = 0
         newDefender.atk = 0
+        message = `${attacker.id} (${attacker.type}) defeated ${defender.id} (${defender.type}) with a debuffing attack!`;
+      } else {
+        newDefender.status = debuff; // Apply debuff on hit too
+        debuff === 'maimed' ? (newDefender.def -= 0.5) : (newDefender.atk -= 0.5);
+        message = `${attacker.id} (${attacker.type}) hit ${defender.id} (${defender.type}) for 1 damage and applied ${debuff}!`;
       }
+      openModal(message);
       return finalizeAction(defender, newDefender)
 
     //default combat
@@ -238,21 +261,24 @@ export const handleCombat = (
     default:
       // console.log('attacker.atk -->', attacker.atk)
       if (rollAttack(attacker.atk) === false) {
-        return console.log(attacker.id, `(${attacker.type})`, ' missed!')
+        openModal(`${attacker.id} (${attacker.type}) missed!`); 
+        return { outcome: 'miss' }; // Return an object to indicate outcome
       }
       if (rollDefend(defender.def) === true) {
-        return console.log(
-          defender.id,
-          `(${defender.type})`,
-          ' deflected the attack!'
-        )
+        openModal(`${defender.id} (${defender.type}) deflected the attack!`); 
+        return { outcome: 'deflected' }; // Return an object to indicate outcome
       }
+      let defaultMessage = "";
       newDefender.hp -= 1
       if (newDefender.hp === 0) {
         newDefender.status = 'killed'
         newDefender.def = 0
         newDefender.atk = 0
+        defaultMessage = `${attacker.id} (${attacker.type}) defeated ${defender.id} (${defender.type})!`;
+      } else {
+        defaultMessage = `${attacker.id} (${attacker.type}) hit ${defender.id} (${defender.type}) for 1 damage.`;
       }
+      openModal(defaultMessage);
       return finalizeAction(defender, newDefender)
   }
 }
@@ -275,10 +301,12 @@ export const processCombat = (
   heroRoster,
   enemyRoster,
   setHeroRoster,
-  setEnemyRoster
+  setEnemyRoster,
+  openModal // Add openModal here
 ) => {
   // Validate the combat pair
   if (!isValidCombatPair(attacker, defender)) {
+    openModal('Invalid combat pair.'); // Optionally, show a modal for this too
     return { outcome: 'invalid' }
   }
 
@@ -289,6 +317,7 @@ export const processCombat = (
     heroRoster,
     enemyRoster,
     setHeroRoster,
-    setEnemyRoster
+    setEnemyRoster,
+    openModal // Pass openModal to handleCombat
   )
 }

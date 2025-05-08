@@ -8,7 +8,8 @@
     "status": "healthy",
     "row": null,
     "team": "hero",
-    "boss": null
+    "boss": null,
+    "rating": 6
   },
   {
     "type": "Knight",
@@ -19,18 +20,8 @@
     "status": "healthy",
     "row": null,
     "team": "hero",
-    "boss": null
-  },
-  {
-    "type": "Necromancer",
-    "maxHp": 1,
-    "hp": 1,
-    "atk": 0,
-    "def": 0.3,
-    "status": "healthy",
-    "row": null,
-    "team": "hero",
-    "boss": null
+    "boss": null,
+    "rating": 5
   },
   {
     "type": "Revived",
@@ -40,8 +31,10 @@
     "def": 0.1,
     "status": "healthy",
     "row": null,
-    "team": "hero",
-    "boss": null
+    "team": null,
+    "boss": null,
+    "rating": 1
+
   },
   {
     "type": "Priest",
@@ -52,7 +45,8 @@
     "status": "healthy",
     "row": null,
     "team": "hero",
-    "boss": null
+    "boss": null,
+    "rating": 3
   },
   {
     "type": "Bard",
@@ -63,7 +57,9 @@
     "status": "healthy",
     "row": null,
     "team": "hero",
-    "boss": null
+    "boss": null,
+    "rating": 3
+
   },
   {
     "type": "Ranger",
@@ -74,7 +70,9 @@
     "status": "healthy",
     "row": null,
     "team": "hero",
-    "boss": null
+    "boss": null,
+    "rating": 4
+
   },
   {
     "type": "Assassin",
@@ -85,7 +83,9 @@
     "status": "healthy",
     "row": null,
     "team": "hero",
-    "boss": null
+    "boss": null,
+    "rating": 5
+
   },
   {
     "type": "Mage",
@@ -96,18 +96,35 @@
     "status": "healthy",
     "row": null,
     "team": "hero",
-    "boss": null
+    "boss": null,
+    "rating": 4
+
   },
   {
     "type": "Warlock",
     "maxHp": 2,
     "hp": 2,
-    "atk": 0.6,
+    "atk": 0.3,
+    "def": 0.6,
+    "status": "healthy",
+    "row": null,
+    "team": "hero",
+    "boss": null,
+    "rating": 6
+
+  },
+  {
+    "type": "Necromancer",
+    "maxHp": 1,
+    "hp": 1,
+    "atk": 0,
     "def": 0.3,
     "status": "healthy",
     "row": null,
     "team": "hero",
-    "boss": null
+    "boss": null,
+    "rating": 8
+
   },
   {
     "type": "Slime",
@@ -118,7 +135,9 @@
     "status": "healthy",
     "row": "front",
     "team": "enemy",
-    "boss": false
+    "boss": false,
+    "rating": 1
+
   },
   {
     "type": "Goblin",
@@ -129,7 +148,9 @@
     "status": "healthy",
     "row": "front",
     "team": "enemy",
-    "boss": false
+    "boss": false,
+    "rating": 2
+
   },
   {
     "type": "Orc",
@@ -140,7 +161,9 @@
     "status": "healthy",
     "row": "front",
     "team": "enemy",
-    "boss": false
+    "boss": false,
+    "rating": 3
+
   },
   {
     "type": "Skeleton_Archer",
@@ -151,7 +174,9 @@
     "status": "healthy",
     "row": "back",
     "team": "enemy",
-    "boss": false
+    "boss": false,
+    "rating": 4
+
   },
   {
     "type": "Skeleton_Mage",
@@ -162,7 +187,9 @@
     "status": "healthy",
     "row": "back",
     "team": "enemy",
-    "boss": false
+    "boss": false,
+    "rating": 5
+
   },
   {
     "type": "Wraith",
@@ -173,7 +200,8 @@
     "status": "healthy",
     "row": "front",
     "team": "enemy",
-    "boss": false
+    "boss": false,
+    "rating": 5
   },
   {
     "type": "Revenant",
@@ -184,7 +212,9 @@
     "status": "healthy",
     "row": "front",
     "team": "enemy",
-    "boss": false
+    "boss": false,
+    "rating": 6
+
   },
   {
     "type": "Minotaur",
@@ -195,7 +225,9 @@
     "status": "healthy",
     "row": "front",
     "team": "enemy",
-    "boss": true
+    "boss": true,
+    "rating": 8
+
   },
   {
     "type": "Wyvern",
@@ -206,29 +238,35 @@
     "status": "healthy",
     "row": "back",
     "team": "enemy",
-    "boss": true
+    "boss": true,
+    "rating": 7
+
   },
   {
     "type": "Medusa",
     "maxHp": 2,
     "hp": 2,
     "atk": 1,
-    "def": 0.2,
+    "def": 0.4,
     "status": "healthy",
     "row": "back",
     "team": "enemy",
-    "boss": true
+    "boss": true,
+    "rating": 4
+
   },
   {
     "type": "Basilisk",
     "maxHp": 4,
     "hp": 4,
     "atk": 0.6,
-    "def": 0.6,
+    "def": 0.9,
     "status": "healthy",
     "row": "front",
     "team": "enemy",
-    "boss": true
+    "boss": true,
+    "rating": 7
+
   },
   {
     "type": "Aredhel_of_the_Pestilence",
@@ -239,6 +277,7 @@
     "status": "healthy",
     "row": "back",
     "team": "enemy",
-    "boss": true
+    "boss": true,
+    "rating": 10
   }
 ]

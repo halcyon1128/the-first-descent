@@ -4,6 +4,7 @@ import { useCombatTracking } from './contexts/CombatTrackingContext'
 import { PlayerProvider } from './contexts/PlayerContext'
 import { ActionProvider } from './contexts/ActionContext'
 import { CombatTrackingProvider } from './contexts/CombatTrackingContext'
+import { ModalProvider } from './contexts/ModalContext' // Import ModalProvider
 import GameBoard from './components/GameBoard'
 import EnemyBoard from './components/EnemyBoard'
 import NewGame from './components/NewGame'
@@ -32,9 +33,11 @@ export function App () {
   return (
     <PlayerProvider>
       <CombatTrackingProvider>
-        <ActionProvider>
-          <AppContent />
-        </ActionProvider>
+        <ModalProvider> {/* Wrap ActionProvider and AppContent with ModalProvider */}
+          <ActionProvider>
+            <AppContent />
+          </ActionProvider>
+        </ModalProvider>
       </CombatTrackingProvider>
     </PlayerProvider>
   )

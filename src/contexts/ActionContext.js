@@ -3,6 +3,7 @@ import { useState, useContext, useCallback, useEffect } from 'preact/hooks'
 import { PlayerContext } from './PlayerContext'
 import { useCombatTracking } from './CombatTrackingContext' // Import useCombatTracking
 import { processCombat, isValidCombatPair } from '../utils/combatUtils'
+import { ModalContext } from './ModalContext' // Import ModalContext
 
 export const ActionContext = createContext()
 
@@ -10,6 +11,7 @@ export function ActionProvider ({ children }) {
   const { heroRoster, enemyRoster, setHeroRoster, setEnemyRoster } =
     useContext(PlayerContext)
   const { setIsPlayerTurn } = useCombatTracking() // Get setIsPlayerTurn
+  const { openModal } = useContext(ModalContext) // Get openModal
 
   const [selectedAttacker, setSelectedAttacker] = useState(null)
   const [selectedDefender, setSelectedDefender] = useState(null)
@@ -53,10 +55,11 @@ export function ActionProvider ({ children }) {
         heroRoster,
         enemyRoster,
         setHeroRoster,
-        setEnemyRoster
+        setEnemyRoster,
+        openModal // Pass openModal
       )
     },
-    [heroRoster, enemyRoster, setHeroRoster, setEnemyRoster]
+    [heroRoster, enemyRoster, setHeroRoster, setEnemyRoster, openModal] // Add openModal to dependencies
   )
 
   // Auto-run combat and reset when both selected
