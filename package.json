@@ -1,11 +1,12 @@
 {
   "private": true,
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
+ "scripts": {
+  "dev": "vite",
+  "build": "vite build",
+  "preview": "vite preview",
+  "deploy": "vite build && gh-pages -d dist"
+},
   "dependencies": {
     "preact": "^10.25.3",
     "preact-iso": "^2.9.1",

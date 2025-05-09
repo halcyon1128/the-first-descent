@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import preact from '@preact/preset-vite'
 
 export default defineConfig({
-  base: '/halcyon1128/',
+  base: '/the-first-descent/',
   plugins: [preact()],
   resolve: {
     alias: {

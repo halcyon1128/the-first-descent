@@ -61,6 +61,7 @@ export default function Card ({
 
   const isDisabled = isKilled && !necromancerSelected
 
+
   function handleClick () {
     selectUnit({ id, type, hp, maxHp, row, atk, def, status, team })
     // trackAction() // Removed call to trackAction
@@ -75,6 +76,10 @@ export default function Card ({
           'data-hp': isKilled ? '0' : hp
         }
       : { className: cardClasses }
+
+
+
+  console.log('selectedAttacker--->', selectedAttacker)
 
   return (
     <button
