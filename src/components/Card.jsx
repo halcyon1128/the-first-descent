@@ -1,8 +1,8 @@
 // Card.jsx
-// Card.jsx
 import { h } from 'preact'
-import { useContext, useLayoutEffect } from 'preact/hooks'
+import { useContext, useLayoutEffect, useState } from 'preact/hooks'
 import { ActionContext } from '../contexts/ActionContext'
+import { useEffect } from 'react'
 // Removed useCombatTracking import as trackAction is no longer needed here
 
 export default function Card ({
@@ -20,15 +20,19 @@ export default function Card ({
     useContext(ActionContext)
   // Removed trackAction destructuring
 
-  // Determine the color for the type name based on team.
-  const nameColor = team === 'enemy' ? 'text-rose-400' : 'text-teal-200'
-  const isKilled = status === 'killed'
-  const isSelected = selectedAttacker?.id === id || selectedDefender?.id === id
+  const [nameColor, setNameColor] = useState('')
+  const [isKilled, setIsKilled] = useState(false)
+  const [isSelected, setIsSelected] = useState(false)
+  const [playerTurn, setPlayerTurn] = useState(localStorage.getItem('playerTurn'))
+  const [cardClasses, setCardClasses] = useState(
+    'font-mono py-4 border border-gray-700 bg-gray-800 rounded-lg shadow-md flex flex-col focus:outline-none selection:bg-transparent w-40'
+  )
 
+console.log('cardClasses: ', cardClasses)
   // Derive whether a necromancer is currently selected from context
   const necromancerSelected =
-    selectedAttacker?.type === 'Necromancer' ||
-    selectedDefender?.type === 'Necromancer'
+  selectedAttacker?.type === 'Necromancer' ||
+  selectedDefender?.type === 'Necromancer'
 
   // Update localStorage synchronously before paint if the necromancer selection changes.
   useLayoutEffect(() => {
@@ -38,29 +42,35 @@ export default function Card ({
     )
   }, [necromancerSelected])
 
-  let cardClasses =
-    'font-mono py-4 border border-gray-700 bg-gray-800 rounded-lg shadow-md flex flex-col focus:outline-none selection:bg-transparent w-40'
+  useEffect(() => {
+    setNameColor(team === 'enemy' ? 'text-rose-400' : 'text-teal-200')
+    setIsKilled(status === 'killed')
+    setIsSelected(selectedAttacker?.id === id || selectedDefender?.id === id)
+    if(necromancerSelected && !isKilled && type !== 'Necromancer'){
+      setCardClasses(cardClasses + ' collapse')
+    } else if (isSelected && !isKilled) {
+      setCardClasses(cardClasses + ' border-yellow-400 border-2')
+    }
+    else if (isKilled && !necromancerSelected) {
+      setCardClasses(cardClasses + ' opacity-50 cursor-not-allowed')
+    }
+    else if (!isKilled && !necromancerSelected) {
+      setCardClasses(cardClasses + ' hover:bg-slate-600')
+    }
+    else {
+      setCardClasses(cardClasses + ' hover:bg-slate-600')
+    }
+  }, [team, status, type, isKilled, necromancerSelected, selectedAttacker, selectedDefender, cardClasses])
 
-  switch (true) {
-    case necromancerSelected && !isKilled && type !== 'Necromancer':
-      cardClasses += ' collapse'
-      break
-    case isSelected && !isKilled:
-      cardClasses += ' border-yellow-400 border-2'
-      break
-    case isKilled && !necromancerSelected:
-      cardClasses += ' opacity-50 cursor-not-allowed'
-      break
-    case !isKilled && !necromancerSelected:
-      cardClasses += ' hover:bg-slate-600'
-      break
-    default:
-      cardClasses += ' hover:bg-slate-600'
-      break
+  const isDisabled = () => { 
+  switch(true) {  
+    case (team === 'enemy' && !selectedAttacker) || (isKilled && !necromancerSelected):
+    return  true
+   default:
+    return false
   }
-
-  const isDisabled = isKilled && !necromancerSelected
-
+  }
+ 
   function handleClick () {
     selectUnit({ id, type, hp, maxHp, row, atk, def, status, team })
     // trackAction() // Removed call to trackAction
@@ -76,10 +86,13 @@ export default function Card ({
         }
       : { className: cardClasses }
 
+  
+  
   return (
     <button
-      onClick={!isDisabled ? () => handleClick() : undefined}
-      disabled={isDisabled}
+      onClick={() =>handleClick()}
+      disabled={isDisabled()}
+      
       {...enemyAttributes}
     >
       <div class='font-serif font-thin text-gray-300'>{id}</div>

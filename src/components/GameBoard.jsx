@@ -24,22 +24,22 @@ export default function GameBoard () {
 
   // Detect clicks outside of cards to reset selections ONLY
   useEffect(() => {
-    const handleOutsideClick = event => {
-      // Only reset if an attacker is selected but not a defender yet
-      if (
-        !event.target.closest('.card') &&
-        selectedAttacker &&
-        !selectedDefender
-      ) {
-        console.log('Outside click detected, resetting selection.')
-        resetSelection() // Use the reset function from ActionContext
-        // DO NOT reset actionCount here - turn switching is handled by EnemyBoard
-      }
-    }
-
     document.addEventListener('click', handleOutsideClick)
     return () => document.removeEventListener('click', handleOutsideClick)
   }, [selectedAttacker, selectedDefender, resetSelection]) // Add resetSelection to dependencies
+
+  const handleOutsideClick = event => {
+    // Only reset if an attacker is selected but not a defender yet
+    if (
+      !event.target.closest('.card') &&
+      selectedAttacker &&
+      !selectedDefender
+    ) {
+      console.log('Outside click detected, resetting selection.')
+      resetSelection() // Use the reset function from ActionContext
+      // DO NOT reset actionCount here - turn switching is handled by EnemyBoard
+    }
+  }
 
   return (
     <div class='h-screen w-screen bg-gray-900 flex flex-col items-center justify-center py-2 text-xs md:text-lg lg:text-lg'>
@@ -67,6 +67,9 @@ export default function GameBoard () {
           <Card {...unit} key={unit.id} className='card' /> // Added key prop
         ))}
       </div>
-    </div>
+      <div class='absolute top-4 left-4 bg-red-600 text-white p-2 rounded shadow-lg z-10'>
+        Player Turn...
+      </div>
+    </div> 
   )
 }

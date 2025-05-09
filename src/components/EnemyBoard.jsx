@@ -123,7 +123,7 @@ export default function EnemyBoard () {
       {/* Enemy Turn Indicator */}
       {/* Ensure this z-index is lower than the overlay if you want it non-interactive,
           or higher if it must be seen above an opaque overlay (though our overlay is transparent) */}
-      <div class='absolute top-4 left-4 bg-red-600 text-white p-2 rounded shadow-lg z-10'>
+      <div class='sticky top-4 left-4 bg-red-600 text-white p-2 rounded shadow-lg z-10'>
         Enemy Turn...
       </div>
 
