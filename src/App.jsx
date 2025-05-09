@@ -1,10 +1,14 @@
 // src/App.jsx
 import { h } from 'preact'
-import { useCombatTracking } from './contexts/CombatTrackingContext'
+// import { useCombatTracking } from './contexts/CombatTrackingContext'
+// import { PlayerProvider } from './contexts/PlayerContext'
 import { PlayerProvider } from './contexts/PlayerContext'
+// import { ActionProvider } from './contexts/ActionContext'
 import { ActionProvider } from './contexts/ActionContext'
-import { CombatTrackingProvider } from './contexts/CombatTrackingContext'
-import { ModalProvider } from './contexts/ModalContext' // Import ModalProvider
+// import { CombatTrackingProvider } from './contexts/CombatTrackingContext'
+import { useCombatTracking, CombatTrackingProvider } from './contexts/CombatTrackingContext'
+// import { ModalProvider } from './contexts/ModalContext' // Import ModalProvider
+import { ModalProvider } from './contexts/ModalContext'
 import GameBoard from './components/GameBoard'
 import EnemyBoard from './components/EnemyBoard'
 import NewGame from './components/NewGame'
