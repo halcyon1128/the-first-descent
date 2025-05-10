@@ -61,7 +61,6 @@ export default function Card ({
 
   const isDisabled = isKilled && !necromancerSelected
 
-
   function handleClick () {
     selectUnit({ id, type, hp, maxHp, row, atk, def, status, team })
     // trackAction() // Removed call to trackAction
@@ -77,16 +76,10 @@ export default function Card ({
         }
       : { className: cardClasses }
 
-
-
   console.log('selectedAttacker--->', selectedAttacker)
 
   return (
-    <button
-      onClick={!isDisabled ? () => handleClick() : undefined}
-      disabled={isDisabled}
-      {...enemyAttributes}
-    >
+    <button onClick={handleClick} disabled={isDisabled} {...enemyAttributes}>
       <div class='font-serif font-thin text-gray-300'>{id}</div>
       <div class={`font-semibold text-xxs mb-2 ${nameColor}`}>{type}</div>
       <div class='text-green-400 font-semibold text-xxs'>
