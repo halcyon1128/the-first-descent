@@ -1,5 +1,3 @@
-// Card.jsx
-// Card.jsx
 import { h } from 'preact'
 import { useContext, useLayoutEffect } from 'preact/hooks'
 import { ActionContext } from '../contexts/ActionContext'
@@ -17,20 +15,16 @@ export default function Card ({
 }) {
   const { selectUnit, selectedAttacker, selectedDefender } =
     useContext(ActionContext)
-  // Removed trackAction destructuring
 
-  // Determine the color for the type name based on team.
   const nameColor = team === 'enemy' ? 'text-rose-400' : 'text-teal-200'
   const isKilled = status === 'killed'
   const isSelected = selectedAttacker?.id === id || selectedDefender?.id === id
   const isEnemy = team === 'enemy'
-
-  // Derive whether a necromancer is currently selected from context
+  const isBuffer = 'Priest' || type === 'Bard'
   const necromancerSelected =
     selectedAttacker?.type === 'Necromancer' ||
     selectedDefender?.type === 'Necromancer'
 
-  // Update localStorage synchronously before paint if the necromancer selection changes.
   useLayoutEffect(() => {
     localStorage.setItem(
       'necromancerSelected',
@@ -42,8 +36,13 @@ export default function Card ({
     'font-mono py-4 border border-gray-700 bg-gray-800 rounded-lg shadow-md flex flex-col focus:outline-none selection:bg-transparent w-40'
 
   switch (true) {
-    case selectedAttacker === null && isEnemy:
-      cardClasses += ' opacity-50 cursor-not-allowed'
+    case isEnemy && !selectedAttacker:
+      cardClasses += ' opacity-80 cursor-not-allowed'
+      break
+    case selectedAttacker &&
+      !['Priest', 'Bard'].includes(selectedAttacker.type) &&
+      !isEnemy:
+      cardClasses += ' opacity-80 cursor-not-allowed'
       break
     case necromancerSelected && !isKilled && type !== 'Necromancer':
       cardClasses += ' collapse'
@@ -54,46 +53,31 @@ export default function Card ({
     case isKilled && !necromancerSelected:
       cardClasses += ' opacity-50 cursor-not-allowed'
       break
-    case !isKilled && !necromancerSelected:
-      cardClasses += ' hover:bg-slate-600'
-      break
     default:
       cardClasses += ' hover:bg-slate-600'
       break
   }
 
-  console.log('DEBUGGING IN PROGRESS')
   function isDisabled () {
-    console.log('isDisabled check:', {
-      isEnemy,
-      selectedAttacker,
-      isKilled,
-      necromancerSelected
-    })
-    if ((isKilled && !necromancerSelected) || (isEnemy && !selectedAttacker)) {
-      console.log('Disabled: true')
-      return true
-    }
-    console.log('Disabled: false')
-    return false
+    return (
+      (isKilled && !necromancerSelected) ||
+      (isEnemy && !selectedAttacker) ||
+      (selectedAttacker && !['Priest', 'Bard'].includes(selectedAttacker.type))
+    )
   }
 
   function handleClick () {
-    selectUnit({ id, type, hp, maxHp, row, atk, def, status, team })
-    // trackAction() // Removed call to trackAction
-    return
+    if (!isDisabled()) {
+      selectUnit({ id, type, hp, maxHp, row, atk, def, status, team })
+    }
   }
 
-  // Add a class and data attribute if this is an enemy card.
-  const enemyAttributes =
-    team === 'enemy'
-      ? {
-          className: `${cardClasses} enemy-card`,
-          'data-hp': isKilled ? '0' : hp
-        }
-      : { className: cardClasses }
-
-  console.log('selectedAttacker--->', selectedAttacker)
+  const enemyAttributes = isEnemy
+    ? {
+        className: `${cardClasses} enemy-card`,
+        'data-hp': isKilled ? '0' : hp
+      }
+    : { className: cardClasses }
 
   return (
     <button onClick={handleClick} disabled={isDisabled()} {...enemyAttributes}>

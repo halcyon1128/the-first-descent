@@ -54,9 +54,7 @@ export default function GameBoard () {
           <Card {...unit} key={unit.id} className='card' /> // Added key prop
         ))}
       </div>
-
-      <div class='h-16'></div>
-
+      <div class='h-12'></div>
       <div class='flex flex-row gap-2 mt-2 justify-center min-h-[120px] items-center'>
         {heroFrontRow.map(unit => (
           <Card {...unit} key={unit.id} className='card' /> // Added key prop
@@ -66,6 +64,9 @@ export default function GameBoard () {
         {heroBackRow.map(unit => (
           <Card {...unit} key={unit.id} className='card' /> // Added key prop
         ))}
+      </div>
+      <div class='absolute top-4 left-4 bg-red-600 text-white p-2 rounded shadow-lg z-10'>
+        Player Turn...
       </div>
     </div>
   )

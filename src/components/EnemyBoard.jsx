@@ -75,7 +75,7 @@ export default function EnemyBoard () {
 
   // --- Effect for PERMANENTLY disabling keyboard and context menu while component is mounted ---
   useEffect(() => {
-    const preventDefaultActions = (event) => {
+    const preventDefaultActions = event => {
       event.preventDefault()
     }
 
@@ -112,21 +112,25 @@ export default function EnemyBoard () {
           width: '100vw',
           height: '100vh',
           backgroundColor: 'transparent', // Keeps it invisible
-          zIndex: 100, // High z-index to cover everything
+          zIndex: 100 // High z-index to cover everything
         }}
         // onClick and onContextMenu on the div itself will stop propagation for mouse events
         // that might somehow target it directly, though the window listeners are more global.
-        onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
-        onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); }}
+        onClick={e => {
+          e.preventDefault()
+          e.stopPropagation()
+        }}
+        onContextMenu={e => {
+          e.preventDefault()
+          e.stopPropagation()
+        }}
       />
-
       {/* Enemy Turn Indicator */}
       {/* Ensure this z-index is lower than the overlay if you want it non-interactive,
           or higher if it must be seen above an opaque overlay (though our overlay is transparent) */}
       <div class='absolute top-4 left-4 bg-red-600 text-white p-2 rounded shadow-lg z-10'>
         Enemy Turn...
       </div>
-
       {/* Render Enemy Rows */}
       <div class='flex flex-row gap-2 justify-center min-h-[120px] items-center'>
         {enemyBackRow.map(unit => (
@@ -152,9 +156,7 @@ export default function EnemyBoard () {
           </div>
         ))}
       </div>
-
-      <div class='h-16'></div>
-
+      <div class='h-12'></div>
       {/* Render Hero Rows (presumably for display only) */}
       <div class='flex flex-row gap-2 mt-2 justify-center min-h-[120px] items-center'>
         {heroFrontRow.map(unit => (
