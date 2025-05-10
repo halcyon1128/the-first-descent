@@ -89,7 +89,7 @@ export default function Card ({
   console.log('selectedAttacker--->', selectedAttacker)
 
   return (
-    <button onClick={handleClick} disabled={isDisabled} {...enemyAttributes}>
+    <button onClick={handleClick} disabled={isDisabled()} {...enemyAttributes}>
       <div class='font-serif font-thin text-gray-300'>{id}</div>
       <div class={`font-semibold text-xxs mb-2 ${nameColor}`}>{type}</div>
       <div class='text-green-400 font-semibold text-xxs'>
