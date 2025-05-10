@@ -41,7 +41,7 @@ export default function Card ({
     'font-mono py-4 border border-gray-700 bg-gray-800 rounded-lg shadow-md flex flex-col focus:outline-none selection:bg-transparent w-40'
 
   switch (true) {
-    case !selectedAttacker && team === 'enemy':
+    case selectedAttacker === null && team === 'enemy':
       cardClasses += ' opacity-50 cursor-not-allowed'
       break
     case necromancerSelected && !isKilled && type !== 'Necromancer':
