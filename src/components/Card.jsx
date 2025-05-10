@@ -63,9 +63,17 @@ export default function Card ({
   }
 
   function isDisabled () {
+    console.log('isDisabled check:', {
+      isEnemy,
+      selectedAttacker,
+      isKilled,
+      necromancerSelected
+    })
     if ((isKilled && !necromancerSelected) || (isEnemy && !selectedAttacker)) {
+      console.log('Disabled: true')
       return true
     }
+    console.log('Disabled: false')
     return false
   }
 
