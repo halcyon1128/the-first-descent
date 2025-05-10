@@ -62,6 +62,7 @@ export default function Card ({
       break
   }
 
+  console.log('DEBUGGING IN PROGRESS')
   function isDisabled () {
     console.log('isDisabled check:', {
       isEnemy,
