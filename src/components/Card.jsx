@@ -23,6 +23,7 @@ export default function Card ({
   const nameColor = team === 'enemy' ? 'text-rose-400' : 'text-teal-200'
   const isKilled = status === 'killed'
   const isSelected = selectedAttacker?.id === id || selectedDefender?.id === id
+  const isEnemy = team === 'enemy'
 
   // Derive whether a necromancer is currently selected from context
   const necromancerSelected =
@@ -41,7 +42,7 @@ export default function Card ({
     'font-mono py-4 border border-gray-700 bg-gray-800 rounded-lg shadow-md flex flex-col focus:outline-none selection:bg-transparent w-40'
 
   switch (true) {
-    case selectedAttacker === null && team === 'enemy':
+    case selectedAttacker === null && isEnemy:
       cardClasses += ' opacity-50 cursor-not-allowed'
       break
     case necromancerSelected && !isKilled && type !== 'Necromancer':
@@ -62,10 +63,7 @@ export default function Card ({
   }
 
   function isDisabled () {
-    if (
-      (isKilled && !necromancerSelected) ||
-      (team === 'enemy' && !selectedAttacker)
-    ) {
+    if ((isKilled && !necromancerSelected) || (isEnemy && !selectedAttacker)) {
       return true
     }
     return false
