@@ -3,7 +3,6 @@
 import { h } from 'preact'
 import { useContext, useLayoutEffect } from 'preact/hooks'
 import { ActionContext } from '../contexts/ActionContext'
-// Removed useCombatTracking import as trackAction is no longer needed here
 
 export default function Card ({
   id,
@@ -62,7 +61,15 @@ export default function Card ({
       break
   }
 
-  const isDisabled = isKilled && !necromancerSelected
+  function isDisabled () {
+    if (
+      (isKilled && !necromancerSelected) ||
+      (team === 'enemy' && !selectedAttacker)
+    ) {
+      return true
+    }
+    return false
+  }
 
   function handleClick () {
     selectUnit({ id, type, hp, maxHp, row, atk, def, status, team })
