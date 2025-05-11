@@ -59,11 +59,15 @@ export default function Card ({
   }
 
   function isDisabled () {
-    return (
+    if (
       (isKilled && !necromancerSelected) ||
       (isEnemy && !selectedAttacker) ||
       (selectedAttacker && !['Priest', 'Bard'].includes(selectedAttacker.type))
-    )
+    ) {
+      return true
+    } else {
+      return false
+    }
   }
 
   function handleClick () {
