@@ -65,7 +65,7 @@ export default function GameBoard () {
           <Card {...unit} key={unit.id} className='card' /> // Added key prop
         ))}
       </div>
-      <div class='absolute top-4 left-4 bg-red-600 text-white p-2 rounded shadow-lg z-10'>
+      <div class='absolute top-4 left-4 bg-sky-600 text-white p-2 rounded shadow-lg z-10'>
         Player Turn...
       </div>
     </div>
