@@ -36,9 +36,9 @@ export default function Card ({
     'font-mono py-4 border border-gray-700 bg-gray-800 rounded-lg shadow-md flex flex-col focus:outline-none selection:bg-transparent w-40'
 
   switch (true) {
-    // case isEnemy && !selectedAttacker:
-    //   cardClasses += ' opacity-80 cursor-not-allowed'
-    //   break
+    case isEnemy && !selectedAttacker:
+      cardClasses += ' opacity-80 cursor-not-allowed'
+      break
     case selectedAttacker &&
       !['Priest', 'Bard'].includes(selectedAttacker.type) &&
       !isEnemy:
