@@ -58,7 +58,7 @@ export default function Card ({
       break
   }
 
-  console.log('selectedAttacker: ', selectedAttacker)
+  console.log('HAYOP_KA')
   function isDisabled () {
     if (
       (isKilled && !necromancerSelected) ||
