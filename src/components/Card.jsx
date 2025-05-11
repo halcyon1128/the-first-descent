@@ -20,7 +20,7 @@ export default function Card ({
   const isKilled = status === 'killed'
   const isSelected = selectedAttacker?.id === id || selectedDefender?.id === id
   const isEnemy = team === 'enemy'
-  const isBuffer = 'Priest' || type === 'Bard'
+  const isBuffer = 'Priest' || 'Bard'
   const necromancerSelected =
     selectedAttacker?.type === 'Necromancer' ||
     selectedDefender?.type === 'Necromancer'
@@ -36,9 +36,9 @@ export default function Card ({
     'font-mono py-4 border border-gray-700 bg-gray-800 rounded-lg shadow-md flex flex-col focus:outline-none selection:bg-transparent w-40'
 
   switch (true) {
-    case isEnemy && !selectedAttacker:
-      cardClasses += ' opacity-80 cursor-not-allowed'
-      break
+    // case isEnemy && !selectedAttacker:
+    //   cardClasses += ' opacity-80 cursor-not-allowed'
+    //   break
     case selectedAttacker &&
       !['Priest', 'Bard'].includes(selectedAttacker.type) &&
       !isEnemy:
@@ -58,11 +58,12 @@ export default function Card ({
       break
   }
 
+  console.log('selectedAttacker: ', selectedAttacker)
   function isDisabled () {
     if (
       (isKilled && !necromancerSelected) ||
       (isEnemy && !selectedAttacker) ||
-      (selectedAttacker && !['Priest', 'Bard'].includes(selectedAttacker.type))
+      selectedAttacker?.type === isBuffer
     ) {
       return true
     } else {
