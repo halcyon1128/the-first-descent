@@ -36,6 +36,9 @@ export default function Card ({
     'font-mono py-4 border border-gray-700 bg-gray-800 rounded-lg shadow-md flex flex-col focus:outline-none selection:bg-transparent w-40'
 
   switch (true) {
+    case isSelected && !isKilled:
+      cardClasses += ' border-yellow-400 border-2'
+      break
     case isEnemy && !selectedAttacker:
       cardClasses += ' opacity-80 cursor-not-allowed'
       break
@@ -46,9 +49,6 @@ export default function Card ({
       break
     case necromancerSelected && !isKilled && type !== 'Necromancer':
       cardClasses += ' collapse'
-      break
-    case isSelected && !isKilled:
-      cardClasses += ' border-yellow-400 border-2'
       break
     case isKilled && !necromancerSelected:
       cardClasses += ' opacity-50 cursor-not-allowed'
@@ -63,7 +63,9 @@ export default function Card ({
     if (
       (isKilled && !necromancerSelected) ||
       (isEnemy && !selectedAttacker) ||
-      selectedAttacker?.type === isBuffer
+      (selectedAttacker !== null &&
+        selectedAttacker.type !== isBuffer &&
+        team !== 'enemy')
     ) {
       return true
     } else {
