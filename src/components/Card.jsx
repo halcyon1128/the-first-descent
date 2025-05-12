@@ -20,7 +20,9 @@ export default function Card ({
   const isKilled = status === 'killed'
   const isSelected = selectedAttacker?.id === id || selectedDefender?.id === id
   const isEnemy = team === 'enemy'
-  const isBuffer = 'Priest' || 'Bard'
+  const isBuffer = selectedAttacker
+    ? ['Priest', 'Bard'].includes(selectedAttacker.type)
+    : false
   const necromancerSelected =
     selectedAttacker?.type === 'Necromancer' ||
     selectedDefender?.type === 'Necromancer'
@@ -36,6 +38,9 @@ export default function Card ({
     'font-mono py-4 border border-gray-700 bg-gray-800 rounded-lg shadow-md flex flex-col focus:outline-none selection:bg-transparent w-40'
 
   switch (true) {
+    case isKilled && !necromancerSelected:
+      cardClasses += ' opacity-50 cursor-not-allowed'
+      break
     case isSelected && !isKilled:
       cardClasses += ' border-yellow-400 border-2'
       break
@@ -61,11 +66,9 @@ export default function Card ({
   console.log('HAYOP_KA')
   function isDisabled () {
     if (
+      (selectedAttacker !== null && !isBuffer && team === 'hero') ||
       (isKilled && !necromancerSelected) ||
-      (isEnemy && !selectedAttacker) ||
-      (selectedAttacker !== null &&
-        selectedAttacker.type !== isBuffer &&
-        team !== 'enemy')
+      (isEnemy && !selectedAttacker)
     ) {
       return true
     } else {
