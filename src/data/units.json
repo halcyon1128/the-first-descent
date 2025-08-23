@@ -9,7 +9,7 @@
     "row": null,
     "team": "hero",
     "boss": null,
-    "rating": 6
+    "rating": 10
   },
   {
     "type": "Knight",
@@ -21,7 +21,7 @@
     "row": null,
     "team": "hero",
     "boss": null,
-    "rating": 5
+    "rating": 8
   },
   {
     "type": "Revived",
@@ -34,7 +34,6 @@
     "team": null,
     "boss": null,
     "rating": 1
-
   },
   {
     "type": "Priest",
@@ -46,7 +45,7 @@
     "row": null,
     "team": "hero",
     "boss": null,
-    "rating": 3
+    "rating": 5
   },
   {
     "type": "Bard",
@@ -59,7 +58,6 @@
     "team": "hero",
     "boss": null,
     "rating": 7
-
   },
   {
     "type": "Ranger",
@@ -71,8 +69,7 @@
     "row": null,
     "team": "hero",
     "boss": null,
-    "rating": 4
-
+    "rating": 9
   },
   {
     "type": "Assassin",
@@ -84,8 +81,7 @@
     "row": null,
     "team": "hero",
     "boss": null,
-    "rating": 5
-
+    "rating": 10
   },
   {
     "type": "Mage",
@@ -98,7 +94,6 @@
     "team": "hero",
     "boss": null,
     "rating": 4
-
   },
   {
     "type": "Warlock",
@@ -110,8 +105,7 @@
     "row": null,
     "team": "hero",
     "boss": null,
-    "rating": 6
-
+    "rating": 20
   },
   {
     "type": "Necromancer",
@@ -123,8 +117,7 @@
     "row": null,
     "team": "hero",
     "boss": null,
-    "rating": 8
-
+    "rating": 20
   },
   {
     "type": "Slime",
@@ -137,7 +130,6 @@
     "team": "enemy",
     "boss": false,
     "rating": 1
-
   },
   {
     "type": "Goblin",
@@ -150,7 +142,6 @@
     "team": "enemy",
     "boss": false,
     "rating": 2
-
   },
   {
     "type": "Orc",
@@ -163,8 +154,8 @@
     "team": "enemy",
     "boss": false,
     "rating": 3
-
-  },{
+  },
+  {
     "type": "Orc_Undead",
     "maxHp": 2,
     "hp": 2,
@@ -175,7 +166,6 @@
     "team": "enemy",
     "boss": false,
     "rating": 2
-
   },
   {
     "type": "Skeleton_Archer",
@@ -188,7 +178,6 @@
     "team": "enemy",
     "boss": false,
     "rating": 4
-
   },
   {
     "type": "Skeleton_Mage",
@@ -201,7 +190,6 @@
     "team": "enemy",
     "boss": false,
     "rating": 5
-
   },
   {
     "type": "Wraith",
@@ -226,7 +214,6 @@
     "team": "enemy",
     "boss": false,
     "rating": 6
-
   },
   {
     "type": "Minotaur",
@@ -239,7 +226,6 @@
     "team": "enemy",
     "boss": true,
     "rating": 8
-
   },
   {
     "type": "Wyvern",
@@ -252,7 +238,6 @@
     "team": "enemy",
     "boss": true,
     "rating": 7
-
   },
   {
     "type": "Medusa",
@@ -265,7 +250,6 @@
     "team": "enemy",
     "boss": true,
     "rating": 4
-
   },
   {
     "type": "Basilisk",
@@ -278,7 +262,6 @@
     "team": "enemy",
     "boss": true,
     "rating": 7
-
   },
   {
     "type": "Aredhel_of_the_Pestilence",
